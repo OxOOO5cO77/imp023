@@ -12,3 +12,10 @@ Saved
 *.suo
 *.xcodeproj
 *.xcworkspace
+
+.idea
+.ignore
+Makefile
+*.code-workspace
+*.uproject.DotSettings
+*.uproject.DotSettings.user
