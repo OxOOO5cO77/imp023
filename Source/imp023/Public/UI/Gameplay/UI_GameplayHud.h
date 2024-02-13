@@ -16,7 +16,7 @@ class IMP023_API UUI_GameplayHud : public UUserWidget
 	GENERATED_BODY()
 
 protected:
-	virtual bool Initialize() override;
+	virtual void NativeOnInitialized() override;
 
 private:
 	void OnUpdateScores(TArray<int> const& Scores) const;

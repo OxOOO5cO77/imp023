@@ -6,17 +6,15 @@
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 
-bool UUI_GameplayHud::Initialize()
+void UUI_GameplayHud::NativeOnInitialized()
 {
-	bool const BaseInit = Super::Initialize();
+	Super::NativeOnInitialized();
 
 	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
 	if (GameState)
 	{
 		GameState->OnUpdateScores().AddUObject(this, &UUI_GameplayHud::OnUpdateScores);
 	}
-
-	return BaseInit;
 }
 
 void UUI_GameplayHud::OnUpdateScores(TArray<int> const& Scores) const
