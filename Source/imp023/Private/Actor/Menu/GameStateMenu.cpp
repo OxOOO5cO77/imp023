@@ -3,6 +3,8 @@
 #include "Actor/Menu/GameStateMenu.h"
 
 #include "Blueprint/UserWidget.h"
+#include "GameFramework/PlayerState.h"
+#include "UI/Menu/Screen.h"
 
 AGameStateMenu::AGameStateMenu()
 {
@@ -30,10 +32,31 @@ void AGameStateMenu::NavigateTo(FString const& Screen)
 
 	if (Destination != nullptr)
 	{
-		CurScreen = CreateWidget<UUserWidget>(GetWorld(), Destination);
+		CurScreen = CreateWidget<UScreen>(GetWorld(), Destination);
 		if (CurScreen != nullptr)
 		{
 			CurScreen->AddToViewport();
 		}
 	}
+}
+
+int AGameStateMenu::ControllerIndex(APlayerControllerMenu const* PlayerControllerMenu) const
+{
+	APlayerState* State = PlayerControllerMenu->GetPlayerState<APlayerState>();
+	return PlayerArray.IndexOfByPredicate([State](APlayerState const* Other) { return State == Other; });
+}
+
+void AGameStateMenu::ProcessInputMain(APlayerControllerMenu const* PlayerControllerMenu) const
+{
+	CurScreen->HandleInputMain(ControllerIndex(PlayerControllerMenu));
+}
+
+void AGameStateMenu::ProcessInputAlt(APlayerControllerMenu const* PlayerControllerMenu) const
+{
+	CurScreen->HandleInputAlt(ControllerIndex(PlayerControllerMenu));
+}
+
+void AGameStateMenu::ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const
+{
+	CurScreen->HandleInputBack(ControllerIndex(PlayerControllerMenu));
 }

@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
+#include "Screen.h"
 #include "UI_MainMenu.generated.h"
 
 class UButton;
@@ -11,7 +11,7 @@ class UButton;
  *
  */
 UCLASS()
-class IMP023_API UUI_MainMenu : public UUserWidget
+class IMP023_API UUI_MainMenu : public UScreen
 {
 	GENERATED_BODY()
 

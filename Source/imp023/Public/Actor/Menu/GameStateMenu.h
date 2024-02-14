@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Actor/Player/PlayerControllerMenu.h"
 #include "GameFramework/GameStateBase.h"
 #include "GameStateMenu.generated.h"
 
+class UScreen;
 /**
  *
  */
@@ -23,11 +25,18 @@ protected:
 public:
 	void NavigateTo(FString const& Screen);
 
+	void ProcessInputMain(APlayerControllerMenu const* PlayerControllerMenu) const;
+	void ProcessInputAlt(APlayerControllerMenu const* PlayerControllerMenu) const;
+	void ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const;
+
 private:
-	TObjectPtr<UUserWidget> CurScreen;
+	int ControllerIndex(APlayerControllerMenu const* PlayerControllerMenu) const;
+
+private:
+	TObjectPtr<UScreen> CurScreen;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Screen Map", meta = (AllowPrivateAccess = "true"))
-	TMap<FString,TSubclassOf<UUserWidget>> ScreenMap;
+	TMap<FString, TSubclassOf<UScreen>> ScreenMap;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Screen Map", meta = (AllowPrivateAccess = "true"))
 	FString Default;
