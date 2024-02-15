@@ -2,6 +2,8 @@
 
 #include "Actor/Menu/GameStateMenu.h"
 
+#include "Actor/Menu/PlayerStateMenu.h"
+#include "Algo/NoneOf.h"
 #include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerState.h"
 #include "UI/Menu/Screen.h"
@@ -40,7 +42,7 @@ void AGameStateMenu::NavigateTo(FString const& Screen)
 	}
 }
 
-int AGameStateMenu::ControllerIndex(APlayerControllerMenu const* PlayerControllerMenu) const
+int AGameStateMenu::ControllerIndex(APlayerControllerMenu const* const PlayerControllerMenu) const
 {
 	APlayerState* State = PlayerControllerMenu->GetPlayerState<APlayerState>();
 	return PlayerArray.IndexOfByPredicate([State](APlayerState const* Other) { return State == Other; });
@@ -59,4 +61,41 @@ void AGameStateMenu::ProcessInputAlt(APlayerControllerMenu const* PlayerControll
 void AGameStateMenu::ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const
 {
 	CurScreen->HandleInputBack(ControllerIndex(PlayerControllerMenu));
+}
+
+static bool StateIsTeam(APlayerState* const PlayerState, ETeam const Team)
+{
+	APlayerStateMenu const* const PlayerStateMenu = Cast<APlayerStateMenu const>(PlayerState);
+	return PlayerStateMenu != nullptr && PlayerStateMenu->Team == Team;
+}
+
+bool AGameStateMenu::SetPlayerToTeam(int const PlayerIndex, ETeam const Team)
+{
+	APlayerStateMenu* const PlayerStateMenu = Cast<APlayerStateMenu>(PlayerArray[PlayerIndex]);
+	if (PlayerStateMenu->Team != ETeam::None)
+	{
+		return false;
+	}
+
+	using namespace std::placeholders;
+	bool const bNone = Algo::NoneOf(PlayerArray, std::bind(&StateIsTeam, _1, Team));
+
+	if (bNone)
+	{
+		check(PlayerStateMenu);
+		PlayerStateMenu->Team = Team;
+	}
+	return bNone;
+}
+
+void AGameStateMenu::DisassociateTeam(ETeam const Team)
+{
+	using namespace std::placeholders;
+	TObjectPtr<APlayerState> const* const Found = PlayerArray.FindByPredicate(std::bind(&StateIsTeam, _1, Team));
+
+	if (Found != nullptr)
+	{
+		APlayerStateMenu* const PlayerStateMenu = Cast<APlayerStateMenu>(*Found);
+		PlayerStateMenu->Team = ETeam::None;
+	}
 }

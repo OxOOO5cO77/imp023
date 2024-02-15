@@ -2,7 +2,10 @@
 
 #include "UI/Menu/UI_PlayerSelect.h"
 
+#include "Actor/Menu/GameStateMenu.h"
+#include "Component/CompTeam.h"
 #include "Components/TextBlock.h"
+#include "Kismet/GameplayStatics.h"
 
 static int constexpr GMaxSlot = 2;
 
@@ -16,6 +19,8 @@ void UUI_PlayerSelect::NativeOnInitialized()
 	TrackedSlotIndex = 0;
 }
 
+static ETeam SlotToTeam[] = {ETeam::Home, ETeam::Away1, ETeam::Away2};
+
 void UUI_PlayerSelect::OnInputMain(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
@@ -25,23 +30,31 @@ void UUI_PlayerSelect::OnInputMain(int const PlayerIndex)
 		return;
 	}
 
-	Advance(PlayerIndex, true);
+	AGameStateMenu* const GameState = Cast<AGameStateMenu>(UGameplayStatics::GetGameState(this));
+	check(GameState);
+
+	bool const Success = GameState->SetPlayerToTeam(PlayerIndex, SlotToTeam[TrackedSlotIndex]);
+
+	if (Success)
+	{
+		Advance(PlayerIndex, true);
+	}
 }
 
 void UUI_PlayerSelect::OnInputAlt(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
-	Advance(PlayerIndex, false);
-}
-
-void UUI_PlayerSelect::Advance(int const PlayerIndex, bool const IsHuman)
-{
 	if (TrackedSlotIndex > GMaxSlot)
 	{
 		return;
 	}
 
+	Advance(PlayerIndex, false);
+}
+
+void UUI_PlayerSelect::Advance(int const PlayerIndex, bool const IsHuman)
+{
 	TWeakObjectPtr<UTextBlock> const CurText = TextFromSlot(TrackedSlotIndex);
 	CurText->SetText(IsHuman ? FText::Format(INVTEXT("PLAYER {0}"), PlayerIndex) : INVTEXT("CPU"));
 
@@ -68,6 +81,11 @@ void UUI_PlayerSelect::OnInputBack(int const PlayerIndex)
 	}
 
 	--TrackedSlotIndex;
+
+	AGameStateMenu* const GameState = Cast<AGameStateMenu>(UGameplayStatics::GetGameState(this));
+	check(GameState);
+
+	GameState->DisassociateTeam(SlotToTeam[TrackedSlotIndex]);
 
 	TWeakObjectPtr<UTextBlock> const PrevText = TextFromSlot(TrackedSlotIndex);
 	PrevText->SetVisibility(ESlateVisibility::Visible);
