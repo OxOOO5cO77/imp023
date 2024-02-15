@@ -2,6 +2,7 @@
 
 #include "Actor/Game/GameModeGameplay.h"
 
+#include "Actor/Game/GameStateGameplay.h"
 #include "Component/CompLocator.h"
 #include "Component/CompTeam.h"
 #include "Component/CompZone.h"
@@ -17,6 +18,10 @@ void AGameModeGameplay::BeginPlay()
 	UWorld* const World = GetWorld();
 	TArray<AActor*> Starts;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), Starts);
+
+
+	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	check(GameState);
 
 	for (AActor const* Start : Starts)
 	{
@@ -35,15 +40,23 @@ void AGameModeGameplay::BeginPlay()
 
 		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeam(Zone, Zone, Locator);
 
-		Player->InitComponents(StartZone->Get(), StartLocator->Get(), Team);
+		Player->InitComponents(Zone, Locator, Team);
 
-		if (Locator == ELocator::West && Zone == EZone::Middle)
+		if (Zone == EZone::Middle)
 		{
-			APlayerController* const Controller = GEngine->GetFirstLocalPlayerController(World);
-
-			Controller->bAutoManageActiveCameraTarget = false;
-			Controller->Possess(Player);
+			PossessWithTeam(GameState, Player, Team);
 		}
+	}
+}
+
+void AGameModeGameplay::PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team)
+{
+	APlayerController* const Controller = GameState->GetPlayerControllerFromTeam(Team);
+
+	if (Controller != nullptr)
+	{
+		Controller->bAutoManageActiveCameraTarget = false;
+		Controller->Possess(Player);
 	}
 }
 

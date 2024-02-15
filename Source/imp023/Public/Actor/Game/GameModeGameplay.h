@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Component/CompTeam.h"
 #include "Component/CompZone.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameModeGameplay.generated.h"
 
+class AGameStateGameplay;
+class APlayerPawn;
 /**
  *
  */
@@ -17,6 +20,9 @@ class IMP023_API AGameModeGameplay : public AGameModeBase
 
 public:
 	virtual void BeginPlay() override;
+
+private:
+	static void PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team);
 
 public:
 	UFUNCTION(BlueprintCallable)

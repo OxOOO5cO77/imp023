@@ -35,11 +35,9 @@ protected:
 
 public:
 	DECLARE_EVENT_OneParam(AGameStateGameplay, FStateChangeEvent, EGameplayGameState)
-
 	FStateChangeEvent& OnStateChange() { return StateChangeEvent; }
 
 	DECLARE_EVENT_OneParam(AGameStateGameplay, FUpdateScoresEvent, TArray<int> const&)
-
 	FUpdateScoresEvent& OnUpdateScores() { return UpdateScoresEvent; }
 
 public:
@@ -61,6 +59,7 @@ public:
 	void ScoreGoal(ETeam const Team);
 	void ResetTracking();
 	void SetState(EGameplayGameState const State);
+	APlayerController* GetPlayerControllerFromTeam(ETeam const Team);
 
 private:
 	FTimerHandle TimerPeriod;

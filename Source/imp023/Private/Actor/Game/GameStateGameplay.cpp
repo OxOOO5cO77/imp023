@@ -3,6 +3,7 @@
 #include "Actor/Game/GameStateGameplay.h"
 
 #include "Actor/Game/GameModeGameplay.h"
+#include "Actor/Player/PlayerStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/GameplayUtils.h"
 
@@ -136,6 +137,23 @@ void AGameStateGameplay::SetState(EGameplayGameState const State)
 	(this->*Map[static_cast<unsigned long>(State)])();
 
 	StateChangeEvent.Broadcast(State);
+}
+
+static bool StateIsTeam(APlayerState* const PlayerState, ETeam const Team)
+{
+	APlayerStateGameplay const* const PlayerStateGameplay = Cast<APlayerStateGameplay const>(PlayerState);
+	return PlayerStateGameplay != nullptr && PlayerStateGameplay->Team == Team;
+}
+
+APlayerController* AGameStateGameplay::GetPlayerControllerFromTeam(ETeam const Team)
+{
+	using namespace std::placeholders;
+	TObjectPtr<APlayerState> const* const PlayerState = PlayerArray.FindByPredicate(std::bind(&StateIsTeam, _1, Team));
+	if (PlayerState != nullptr)
+	{
+		return (*PlayerState)->GetPlayerController();
+	}
+	return nullptr;
 }
 
 void AGameStateGameplay::DelayedStateChange(EGameplayGameState const NewState, float const Delay)
