@@ -63,7 +63,7 @@ void AGameStateMenu::ProcessInputBack(APlayerControllerMenu const* PlayerControl
 	CurScreen->HandleInputBack(ControllerIndex(PlayerControllerMenu));
 }
 
-static bool StateIsTeam(APlayerState* const PlayerState, ETeam const Team)
+static bool PlayerStateMenuIsTeam(APlayerState* const PlayerState, ETeam const Team)
 {
 	APlayerStateMenu const* const PlayerStateMenu = Cast<APlayerStateMenu const>(PlayerState);
 	return PlayerStateMenu != nullptr && PlayerStateMenu->Team == Team;
@@ -78,7 +78,7 @@ bool AGameStateMenu::SetPlayerToTeam(int const PlayerIndex, ETeam const Team)
 	}
 
 	using namespace std::placeholders;
-	bool const bNone = Algo::NoneOf(PlayerArray, std::bind(&StateIsTeam, _1, Team));
+	bool const bNone = Algo::NoneOf(PlayerArray, std::bind(&PlayerStateMenuIsTeam, _1, Team));
 
 	if (bNone)
 	{
@@ -91,7 +91,7 @@ bool AGameStateMenu::SetPlayerToTeam(int const PlayerIndex, ETeam const Team)
 void AGameStateMenu::DisassociateTeam(ETeam const Team)
 {
 	using namespace std::placeholders;
-	TObjectPtr<APlayerState> const* const Found = PlayerArray.FindByPredicate(std::bind(&StateIsTeam, _1, Team));
+	TObjectPtr<APlayerState> const* const Found = PlayerArray.FindByPredicate(std::bind(&PlayerStateMenuIsTeam, _1, Team));
 
 	if (Found != nullptr)
 	{

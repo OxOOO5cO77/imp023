@@ -139,7 +139,7 @@ void AGameStateGameplay::SetState(EGameplayGameState const State)
 	StateChangeEvent.Broadcast(State);
 }
 
-static bool StateIsTeam(APlayerState* const PlayerState, ETeam const Team)
+static bool PlayerStateGameplayIsTeam(APlayerState* const PlayerState, ETeam const Team)
 {
 	APlayerStateGameplay const* const PlayerStateGameplay = Cast<APlayerStateGameplay const>(PlayerState);
 	return PlayerStateGameplay != nullptr && PlayerStateGameplay->Team == Team;
@@ -148,7 +148,7 @@ static bool StateIsTeam(APlayerState* const PlayerState, ETeam const Team)
 APlayerController* AGameStateGameplay::GetPlayerControllerFromTeam(ETeam const Team)
 {
 	using namespace std::placeholders;
-	TObjectPtr<APlayerState> const* const PlayerState = PlayerArray.FindByPredicate(std::bind(&StateIsTeam, _1, Team));
+	TObjectPtr<APlayerState> const* const PlayerState = PlayerArray.FindByPredicate(std::bind(&PlayerStateGameplayIsTeam, _1, Team));
 	if (PlayerState != nullptr)
 	{
 		return (*PlayerState)->GetPlayerController();
