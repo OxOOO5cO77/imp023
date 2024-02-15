@@ -5,18 +5,17 @@
 #include "CoreMinimal.h"
 #include "Component/CompTeam.h"
 #include "GameFramework/PlayerState.h"
-#include "PlayerStateMenu.generated.h"
+#include "PlayerStateGameplay.generated.h"
 
 /**
  *
  */
 UCLASS()
-class IMP023_API APlayerStateMenu : public APlayerState
+class IMP023_API APlayerStateGameplay : public APlayerState
 {
 	GENERATED_BODY()
 public:
-	APlayerStateMenu();
-	virtual void CopyProperties(APlayerState* PlayerState) override;
+	APlayerStateGameplay();
 public:
 	ETeam Team;
 };

@@ -16,7 +16,7 @@ class UScreen;
 UCLASS()
 class IMP023_API AGameStateMenu : public AGameStateBase
 {
-	GENERATED_BODY()None
+	GENERATED_BODY()
 
 public:
 	AGameStateMenu();

@@ -27,6 +27,7 @@ void UUI_PlayerSelect::OnInputMain(int const PlayerIndex)
 
 	if (TrackedSlotIndex > GMaxSlot)
 	{
+		GetWorld()->ServerTravel("/Game/Level/Arena");
 		return;
 	}
 

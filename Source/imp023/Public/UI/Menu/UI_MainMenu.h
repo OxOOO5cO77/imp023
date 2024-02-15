@@ -17,12 +17,5 @@ class IMP023_API UUI_MainMenu : public UScreen
 
 protected:
 	virtual void NativeOnInitialized() override;
-
-private:
-	UFUNCTION()
-	void OnClickGo();
-
-private:
-	UPROPERTY()
-	UButton* ButtonGo;
+	virtual void OnInputMain(int const PlayerIndex) override;
 };
