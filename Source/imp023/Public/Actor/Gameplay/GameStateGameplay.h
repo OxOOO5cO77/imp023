@@ -57,7 +57,7 @@ public:
 	void SetCurrentTeamTouched(ETeam const Team);
 	void ChangeZone(EZone const Zone);
 	void ScoreGoal(ETeam const Team);
-	void ResetTracking();
+	void ResetGameplay();
 	void SetState(EGameplayGameState const State);
 	APlayerController* GetPlayerControllerFromTeam(ETeam const Team);
 

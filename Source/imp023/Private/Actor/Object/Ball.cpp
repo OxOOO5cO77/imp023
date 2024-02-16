@@ -37,7 +37,7 @@ void ABall::Boost(FVector const& Boost) const
 	CompStaticMeshBase->AddImpulse(Velocity * Boost, NAME_None, true);
 }
 
-void ABall::Reset()
+void ABall::ResetBall()
 {
 	SetActorLocation(FVector::ZeroVector);
 	CompStaticMeshBase->SetPhysicsLinearVelocity(FVector::ZeroVector);
@@ -49,7 +49,7 @@ void ABall::OnStateChange(EGameplayGameState const State)
 	{
 		case EGameplayGameState::PrePeriod:
 		case EGameplayGameState::PrePlay:
-			Reset();
+			ResetBall();
 			break;
 		default:
 			break;

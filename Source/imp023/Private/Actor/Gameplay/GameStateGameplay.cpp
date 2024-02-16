@@ -56,18 +56,21 @@ void AGameStateGameplay::ScoreGoal(ETeam const Team)
 
 	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
 
-	GameMode->ResetActorsForZone(EZone::Middle, EZone::Middle);	// reset players in the leaving zone (CurrentZone) as if the ball was coming from the new zone (Zone)
+	GameMode->ResetActorsForZone(EZone::Middle, EZone::Middle);
 
 	SetState(EGameplayGameState::PostPlay);
 }
 
-void AGameStateGameplay::ResetTracking()
+void AGameStateGameplay::ResetGameplay()
 {
 	PreviousZone = EZone::Middle;
 	CurrentZone = EZone::Middle;
 
 	PreviousTeamTouched = ETeam::None;
 	CurrentTeamTouched = ETeam::None;
+
+	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
+	GameMode->ResetActorsForAllZones();
 }
 
 void AGameStateGameplay::SetState_PreMatch()
@@ -91,7 +94,7 @@ void AGameStateGameplay::SetState_PrePeriod()
 void AGameStateGameplay::SetState_PrePlay()
 {
 	GetWorld()->GetTimerManager().PauseTimer(TimerPeriod);
-	ResetTracking();
+	ResetGameplay();
 
 	DelayedStateChange(EGameplayGameState::Play, 3.0f);
 }

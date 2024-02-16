@@ -37,7 +37,7 @@ void AGameModeGameplay::BeginPlay()
 
 		APlayerPawn* const Player = Cast<APlayerPawn>(World->SpawnActor(DefaultPawnClass, &Start->GetActorTransform()));
 
-		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeam(Zone, Zone, Locator);
+		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeamPeriod(Zone, Zone, Locator, GameState->Period);
 
 		Player->InitComponents(Zone, Locator, Team);
 
@@ -70,12 +70,6 @@ static bool IsInZone(AActor const* const Actor, EZone const Zone)
 	return CompZone->Get() == Zone;
 }
 
-// static bool IsAtLocator(AActor const* const actor, ELocator const locator)
-// {
-// 	UCompLocator const* const locator_comp = Cast<UCompLocator>(actor->GetComponentByClass(UCompLocator::StaticClass()));
-// 	return locator_comp->Get() == locator;
-// }
-
 static bool IsOnTeam(AActor const* const Actor, ETeam const Team)
 {
 	if (Actor == nullptr)
@@ -87,17 +81,54 @@ static bool IsOnTeam(AActor const* const Actor, ETeam const Team)
 	return CompTeam->Get() == Team;
 }
 
-void AGameModeGameplay::ResetActorsForZone(EZone const ZoneFrom, EZone const ZoneTo) const
+void AGameModeGameplay::ResetActorsForAllZones() const
 {
 	UWorld const* World = GetWorld();
 
 	TArray<AActor*> Starts;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), Starts);
-	TArray<AActor*> StartsInZone = Starts.FilterByPredicate([ZoneTo](AActor const* const Actor) { return IsInZone(Actor, ZoneTo); });
 
 	TArray<AActor*> Players;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerPawn::StaticClass(), Players);
-	TArray<AActor*> PlayersInZone = Players.FilterByPredicate([ZoneTo](AActor const* const Actor) { return IsInZone(Actor, ZoneTo); });
+
+	for (AActor const* Start : Starts)
+	{
+		UCompZone const* const StartZone = Cast<UCompZone>(Start->GetComponentByClass(UCompZone::StaticClass()));
+		EZone const Zone = StartZone->Get();
+
+		UCompLocator const* const StartLoc = Cast<UCompLocator>(Start->GetComponentByClass(UCompLocator::StaticClass()));
+		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeamPeriod(Zone, Zone, StartLoc->Get(), GetGameState<AGameStateGameplay>()->Period);
+
+		if (Team == ETeam::None)
+		{
+			continue;
+		}
+
+		AActor** const Result = Players.FindByPredicate([Zone,Team](AActor const* const PlayerPawn) ->bool { return IsOnTeam(PlayerPawn,Team) && IsInZone(PlayerPawn,Zone);});
+		if (Result == nullptr)
+		{
+			continue;
+		}
+
+		APlayerPawn* const Player = Cast<APlayerPawn>(*Result);
+		Player->ResetTo(Start->GetActorLocation());
+	}
+}
+
+void AGameModeGameplay::ResetActorsForZone(EZone const ZoneFrom, EZone const ZoneTo) const
+{
+	UWorld const* World = GetWorld();
+
+	using namespace std::placeholders;
+	auto const PredIsInZone = std::bind(&IsInZone, _1, ZoneTo);
+
+	TArray<AActor*> Starts;
+	UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), Starts);
+	TArray<AActor*> StartsInZone = Starts.FilterByPredicate(PredIsInZone);
+
+	TArray<AActor*> Players;
+	UGameplayStatics::GetAllActorsOfClass(World, APlayerPawn::StaticClass(), Players);
+	TArray<AActor*> PlayersInZone = Players.FilterByPredicate(PredIsInZone);
 
 	for (AActor const* Start : StartsInZone)
 	{
@@ -108,14 +139,15 @@ void AGameModeGameplay::ResetActorsForZone(EZone const ZoneFrom, EZone const Zon
 		}
 
 		UCompLocator const* const StartLoc = Cast<UCompLocator>(Start->GetComponentByClass(UCompLocator::StaticClass()));
-		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeam(ZoneFrom, ZoneTo, StartLoc->Get());
+		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeamPeriod(ZoneFrom, ZoneTo, StartLoc->Get(), GetGameState<AGameStateGameplay>()->Period);
 
 		if (Team == ETeam::None)
 		{
 			continue;
 		}
+		auto const PredIsOnTeam = std::bind(&IsOnTeam, _1, Team);
 
-		AActor** const Result = PlayersInZone.FindByPredicate([Team](AActor const* const Actor) { return IsOnTeam(Actor, Team); });
+		AActor** const Result = PlayersInZone.FindByPredicate(PredIsOnTeam);
 		if (Result == nullptr)
 		{
 			UE_LOG(LogTemp, Error, TEXT("ResetActorsForZone: result is null for %d @ %d (total players in zone: %d)"), ZoneTo, Team, PlayersInZone.Num())

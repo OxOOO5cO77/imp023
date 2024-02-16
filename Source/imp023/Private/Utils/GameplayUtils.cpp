@@ -4,6 +4,7 @@
 
 static ETeam const* MapZonesToTeam(EZone const ZoneFrom, EZone const ZoneTo)
 {
+	//								ignore		north		east		   south		west
 	static ETeam A1A2NoHo[5] = {ETeam::None, ETeam::Away1, ETeam::Away2, ETeam::None, ETeam::Home};
 	static ETeam A1A2HoNo[5] = {ETeam::None, ETeam::Away1, ETeam::Away2, ETeam::Home, ETeam::None};
 	static ETeam NoA2A1Ho[5] = {ETeam::None, ETeam::None, ETeam::Away2, ETeam::Away1, ETeam::Home};
@@ -37,11 +38,11 @@ static ETeam const* MapZonesToTeam(EZone const ZoneFrom, EZone const ZoneTo)
 	return nullptr;
 }
 
-ETeam FGameplayUtils::MapZoneLocatorToTeam(EZone const ZoneFrom, EZone const ZoneTo, ELocator const Locator)
+ETeam FGameplayUtils::MapZoneLocatorToTeamPeriod(EZone const ZoneFrom, EZone const ZoneTo, ELocator const Locator, int const Period)
 {
 	int const Index = static_cast<int>(Locator);
 	ETeam const* Teams = MapZonesToTeam(ZoneFrom, ZoneTo);
-	return Teams[Index];
+	return MapPeriodTeamToTeam(Period, Teams[Index]);
 }
 
 ETeam FGameplayUtils::MapPeriodTeamToTeam(int const Period, ETeam const Source)

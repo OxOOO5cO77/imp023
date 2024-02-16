@@ -25,9 +25,7 @@ private:
 	static void PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team);
 
 public:
-	UFUNCTION(BlueprintCallable)
+	void ResetActorsForAllZones() const;
 	void ResetActorsForZone(EZone const ZoneFrom, EZone const ZoneTo) const;
-
-	UFUNCTION(BlueprintCallable)
 	void HandlePossession(EZone const Zone) const;
 };

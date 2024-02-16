@@ -9,6 +9,6 @@
 class FGameplayUtils
 {
 public:
-	static ETeam MapZoneLocatorToTeam(EZone const ZoneFrom, EZone const ZoneTo, ELocator const Locator);
+	static ETeam MapZoneLocatorToTeamPeriod(EZone const ZoneFrom, EZone const ZoneTo, ELocator const Locator, int const Period);
 	static ETeam MapPeriodTeamToTeam(int const Period, ETeam const Source);
 };

@@ -30,6 +30,6 @@ private:
 	UStaticMeshComponent* CompStaticMeshBase;
 
 private:
-	virtual void Reset() override;
+	void ResetBall();
 	void OnStateChange(EGameplayGameState const State);
 };
