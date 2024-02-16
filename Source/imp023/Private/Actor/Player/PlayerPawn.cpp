@@ -51,6 +51,11 @@ void APlayerPawn::ResetTo(FVector const& Location)
 	CompStaticMeshBase->SetPhysicsLinearVelocity(FVector::Zero());
 }
 
+ETeam APlayerPawn::GetTeam() const
+{
+	return CompTeam->Get();
+}
+
 void APlayerPawn::InitComponents(EZone const Zone, ELocator const Locator, ETeam const Team) const
 {
 	CompZone->Set(Zone);

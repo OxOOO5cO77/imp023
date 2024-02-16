@@ -19,8 +19,7 @@ void AGameModeGameplay::BeginPlay()
 	TArray<AActor*> Starts;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), Starts);
 
-
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
 	check(GameState);
 
 	for (AActor const* Start : Starts)
@@ -133,17 +132,15 @@ void AGameModeGameplay::HandlePossession(EZone const Zone) const
 	UWorld const* World = GetWorld();
 	TArray<AActor*> Players;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerPawn::StaticClass(), Players);
-	ETeam constexpr Team = ETeam::Home;
-	AActor** const Result = Players.FindByPredicate([Zone, Team](AActor const* const Actor) { return IsInZone(Actor, Zone) && IsOnTeam(Actor, Team); });
 
-	if (Result == nullptr)
+	using namespace std::placeholders;
+	TArray<AActor*> FilteredPlayers = Players.FilterByPredicate(std::bind(&IsInZone, _1, Zone));
+
+	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
+
+	for (AActor* FilteredPlayer : FilteredPlayers)
 	{
-		UE_LOG(LogTemp, Error, TEXT("HandlePossession: result is null for %d @ %d (total: $d)"), Zone, Team, Players.Num())
-		return;
+		APlayerPawn* const Player = Cast<APlayerPawn>(FilteredPlayer);
+		PossessWithTeam(GameState, Player, Player->GetTeam());
 	}
-
-	APlayerPawn* const Player = Cast<APlayerPawn>(*Result);
-
-	APlayerController* const Controller = GEngine->GetFirstLocalPlayerController(World);
-	Controller->Possess(Player);
 }

@@ -19,8 +19,6 @@ class IMP023_API APlayerControllerGameplay : public APlayerController
 public:
 	virtual void BeginPlay() override;
 	virtual void SetupInputComponent() override;
-	virtual void OnPossess(APawn* InPawn) override;
-
 private:
 	void ActionMove(FInputActionValue const& InputActionValue);
 	void ActionBoost(FInputActionValue const& InputActionValue);

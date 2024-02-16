@@ -23,6 +23,11 @@ void APlayerControllerGameplay::BeginPlay()
 			}
 		}
 	}
+
+	AActor* const Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ABall::StaticClass());
+	ABall* Ball = Cast<ABall>(Actor);
+
+	SetViewTargetWithBlend(Ball);
 }
 
 void APlayerControllerGameplay::SetupInputComponent()
@@ -36,27 +41,10 @@ void APlayerControllerGameplay::SetupInputComponent()
 	EnhancedInput->BindAction(InputActionBoost, ETriggerEvent::Started, this, &APlayerControllerGameplay::ActionBoost);
 }
 
-void APlayerControllerGameplay::OnPossess(APawn* InPawn)
-{
-	Super::OnPossess(InPawn);
-
-	AActor* const Actor = UGameplayStatics::GetActorOfClass(GetWorld(), ABall::StaticClass());
-	ABall* Ball = Cast<ABall>(Actor);
-
-	APlayerController* PlayerController = Cast<APlayerController>(InPawn->GetController());
-	if (PlayerController != nullptr)
-	{
-		PlayerController->SetViewTargetWithBlend(Ball);
-	}
-}
-
 void APlayerControllerGameplay::ActionMove(FInputActionValue const& InputActionValue)
 {
-	FVector Input = InputActionValue.Get<FVector>();
-	Input.Normalize();
-
 	APlayerPawn const* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
-	PlayerPawn->Move(Input);
+	PlayerPawn->Move(InputActionValue.Get<FVector>());
 }
 
 void APlayerControllerGameplay::ActionBoost(FInputActionValue const& InputActionValue)
