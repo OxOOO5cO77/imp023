@@ -2,9 +2,9 @@
 
 #include "Actor/Volume/VolumeZone.h"
 
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
 #include "Component/CompZone.h"
-#include "Actor/Game/GameStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
 
 AVolumeZone::AVolumeZone()

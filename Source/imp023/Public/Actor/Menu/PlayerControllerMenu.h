@@ -28,7 +28,7 @@ private:
 	void ActionBack(const FInputActionValue& InputActionValue);
 
 private:
-	UPROPERTY(EditAnywhere, Category="Input")
+	UPROPERTY(EditAnywhere, Category="Input", meta = (AllowPrivateAccess = "true"))
 	TSoftObjectPtr<UInputMappingContext> InputMapping;
 	UPROPERTY(EditAnywhere, Category="Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction const* InputActionMain;

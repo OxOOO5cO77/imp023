@@ -1,9 +1,9 @@
 // Copyright 2024 Impending Technologies
 
-#include "Actor/Game/GameStateGameplay.h"
+#include "Actor/Gameplay/GameStateGameplay.h"
 
-#include "Actor/Game/GameModeGameplay.h"
-#include "Actor/Player/PlayerStateGameplay.h"
+#include "Actor/Gameplay/GameModeGameplay.h"
+#include "Actor/Gameplay/PlayerStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
 #include "Utils/GameplayUtils.h"
 

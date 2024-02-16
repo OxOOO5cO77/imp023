@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Player/PlayerControllerMenu.h"
+#include "Actor/Menu/PlayerControllerMenu.h"
 #include "Component/CompTeam.h"
 #include "GameFramework/GameStateBase.h"
 #include "UI/Menu/UI_PlayerSelect.h"

@@ -2,7 +2,7 @@
 
 #include "Actor/Object/Ball.h"
 
-#include "Actor/Game/GameStateGameplay.h"
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values

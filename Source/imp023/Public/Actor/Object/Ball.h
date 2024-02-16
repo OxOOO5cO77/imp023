@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Game/GameStateGameplay.h"
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "GameFramework/Actor.h"
 #include "Ball.generated.h"
 
@@ -31,5 +31,5 @@ private:
 
 private:
 	virtual void Reset() override;
-	void OnStateChange(EGameplayGameState State);
+	void OnStateChange(EGameplayGameState const State);
 };

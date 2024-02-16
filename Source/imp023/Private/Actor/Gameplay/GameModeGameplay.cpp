@@ -1,8 +1,8 @@
 // Copyright 2024 Impending Technologies
 
-#include "Actor/Game/GameModeGameplay.h"
+#include "Actor/Gameplay/GameModeGameplay.h"
 
-#include "Actor/Game/GameStateGameplay.h"
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Component/CompLocator.h"
 #include "Component/CompTeam.h"
 #include "Component/CompZone.h"

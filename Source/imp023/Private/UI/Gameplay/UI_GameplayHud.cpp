@@ -2,7 +2,7 @@
 
 #include "UI/Gameplay/UI_GameplayHud.h"
 
-#include "Actor/Game/GameStateGameplay.h"
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 

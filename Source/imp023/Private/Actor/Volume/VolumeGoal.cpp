@@ -2,9 +2,9 @@
 
 #include "Actor/Volume/VolumeGoal.h"
 
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
 #include "Component/CompTeam.h"
-#include "Actor/Game/GameStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
 
 AVolumeGoal::AVolumeGoal()

@@ -1,16 +1,11 @@
 // Copyright 2024 Impending Technologies
-
-
-#include "Actor/Player/PlayerControllerMenu.h"
+#include "Actor/Menu/PlayerControllerMenu.h"
 
 #include "Actor/Menu/GameStateMenu.h"
 #include "Kismet/GameplayStatics.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
-
-
-//static ConstructorHelpers::FObjectFinder<UStaticMesh> GroundShape(TEXT("StaticMesh'/Game/Shapes/Ground/ground_shape_1.ground_shape_1'"));
 
 void APlayerControllerMenu::BeginPlay()
 {

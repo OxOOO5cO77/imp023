@@ -2,8 +2,8 @@
 
 #include "Actor/Player/PlayerPawn.h"
 
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
-#include "Actor/Game/GameStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 

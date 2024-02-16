@@ -3,7 +3,7 @@
 
 #include "Actor/Menu/PlayerStateMenu.h"
 
-#include "Actor/Player/PlayerStateGameplay.h"
+#include "Actor/Gameplay/PlayerStateGameplay.h"
 
 APlayerStateMenu::APlayerStateMenu()
 	: Team(ETeam::None)
