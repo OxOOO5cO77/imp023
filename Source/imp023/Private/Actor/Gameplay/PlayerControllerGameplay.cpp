@@ -9,9 +9,19 @@
 #include "Actor/Player/PlayerPawn.h"
 #include "Kismet/GameplayStatics.h"
 
+APlayerControllerGameplay::APlayerControllerGameplay()
+	: InputActionMove(nullptr)
+	  , InputActionBoost(nullptr)
+	  , bCanMove(false)
+{
+}
+
 void APlayerControllerGameplay::BeginPlay()
 {
 	Super::BeginPlay();
+
+	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	OnStateChangeHandle = GameState->OnStateChange().AddUObject(this, &APlayerControllerGameplay::OnStateChange);
 
 	if (ULocalPlayer const* LocalPlayer = Cast<ULocalPlayer>(Player))
 	{
@@ -30,6 +40,14 @@ void APlayerControllerGameplay::BeginPlay()
 	SetViewTargetWithBlend(Ball);
 }
 
+void APlayerControllerGameplay::EndPlay(EEndPlayReason::Type const EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	GameState->OnStateChange().Remove(OnStateChangeHandle);
+}
+
 void APlayerControllerGameplay::SetupInputComponent()
 {
 	Super::SetupInputComponent();
@@ -43,12 +61,25 @@ void APlayerControllerGameplay::SetupInputComponent()
 
 void APlayerControllerGameplay::ActionMove(FInputActionValue const& InputActionValue)
 {
+	if(!bCanMove)
+	{
+		return;
+	}
 	APlayerPawn const* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
 	PlayerPawn->Move(InputActionValue.Get<FVector>());
 }
 
 void APlayerControllerGameplay::ActionBoost(FInputActionValue const& InputActionValue)
 {
+	if(!bCanMove)
+	{
+		return;
+	}
 	APlayerPawn const* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
 	PlayerPawn->Boost();
+}
+
+void APlayerControllerGameplay::OnStateChange(EGameplayGameState const GameplayGameState)
+{
+	bCanMove = GameplayGameState == EGameplayGameState::Play;
 }
