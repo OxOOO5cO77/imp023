@@ -20,6 +20,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(EEndPlayReason::Type const EndPlayReason) override;
 
 public:
 	void Boost(FVector const& Boost) const;
@@ -32,4 +33,8 @@ private:
 private:
 	void ResetBall();
 	void OnStateChange(EGameplayGameState const State);
+
+private:
+	FDelegateHandle OnStateChangeHandle;
 };
+

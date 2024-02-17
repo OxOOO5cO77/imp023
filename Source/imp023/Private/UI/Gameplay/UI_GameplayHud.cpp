@@ -13,7 +13,18 @@ void UUI_GameplayHud::NativeOnInitialized()
 	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
 	if (GameState)
 	{
-		GameState->OnUpdateScores().AddUObject(this, &UUI_GameplayHud::OnUpdateScores);
+		OnUpdateScoresHandle = GameState->OnUpdateScores().AddUObject(this, &UUI_GameplayHud::OnUpdateScores);
+	}
+}
+
+void UUI_GameplayHud::NativeDestruct()
+{
+	Super::NativeDestruct();
+
+	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
+	if (GameState)
+	{
+		GameState->OnUpdateScores().Remove(OnUpdateScoresHandle);
 	}
 }
 

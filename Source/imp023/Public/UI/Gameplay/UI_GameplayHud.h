@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Blueprint/UserWidget.h"
 #include "UI_GameplayHud.generated.h"
 
@@ -17,6 +18,7 @@ class IMP023_API UUI_GameplayHud : public UUserWidget
 
 protected:
 	virtual void NativeOnInitialized() override;
+	virtual void NativeDestruct() override;
 
 private:
 	void OnUpdateScores(TArray<int> const& Scores) const;
@@ -28,4 +30,7 @@ private:
 	UTextBlock* TextScoreAway1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score", meta = (AllowPrivateAccess = "true"))
 	UTextBlock* TextScoreAway2;
+
+private:
+	FDelegateHandle OnUpdateScoresHandle;
 };
