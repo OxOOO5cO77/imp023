@@ -22,6 +22,9 @@ enum class EGameplayGameState : uint8
 	Max
 };
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FStateChangeEvent, EGameplayGameState);
+DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateScoresEvent, TArray<int> const&);
+
 /**
  *
  */
@@ -34,10 +37,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	DECLARE_EVENT_OneParam(AGameStateGameplay, FStateChangeEvent, EGameplayGameState)
 	FStateChangeEvent& OnStateChange() { return StateChangeEvent; }
-
-	DECLARE_EVENT_OneParam(AGameStateGameplay, FUpdateScoresEvent, TArray<int> const&)
 	FUpdateScoresEvent& OnUpdateScores() { return UpdateScoresEvent; }
 
 public:
