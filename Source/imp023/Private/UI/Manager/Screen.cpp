@@ -1,6 +1,11 @@
 // Copyright 2024 Impending Technologies
 
-#include "UI/Menu/Screen.h"
+#include "UI/Manager/Screen.h"
+
+void UScreen::Attach(UScreenManager* const Manager)
+{
+	ScreenManager = Manager;
+}
 
 void UScreen::HandleInputMain(int const Idx)
 {

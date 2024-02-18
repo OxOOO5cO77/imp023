@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Actor/Gameplay/GameStateGameplay.h"
 #include "Blueprint/UserWidget.h"
 #include "UI_GameplayHud.generated.h"
 

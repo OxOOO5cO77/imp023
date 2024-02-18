@@ -4,42 +4,17 @@
 
 #include "Actor/Menu/PlayerStateMenu.h"
 #include "Algo/NoneOf.h"
-#include "Blueprint/UserWidget.h"
 #include "GameFramework/PlayerState.h"
-#include "UI/Menu/Screen.h"
-
-AGameStateMenu::AGameStateMenu()
-{
-	CurScreen = nullptr;
-}
 
 void AGameStateMenu::BeginPlay()
 {
 	Super::BeginPlay();
 
-	NavigateTo(Default);
-}
+	check(BPScreenManager);
+	ScreenManager = NewObject<UScreenManager>(this, BPScreenManager);;
+	check(ScreenManager);
 
-void AGameStateMenu::NavigateTo(FString const& Screen)
-{
-	check(ScreenMap.Contains(Screen));
-
-	if (CurScreen != nullptr)
-	{
-		CurScreen->RemoveFromParent();
-		CurScreen = nullptr;
-	}
-
-	TSubclassOf<UUserWidget> const Destination = ScreenMap[Screen];
-
-	if (Destination != nullptr)
-	{
-		CurScreen = CreateWidget<UScreen>(GetWorld(), Destination);
-		if (CurScreen != nullptr)
-		{
-			CurScreen->AddToViewport();
-		}
-	}
+	ScreenManager->Start();
 }
 
 int AGameStateMenu::ControllerIndex(APlayerControllerMenu const* const PlayerControllerMenu) const
@@ -50,17 +25,17 @@ int AGameStateMenu::ControllerIndex(APlayerControllerMenu const* const PlayerCon
 
 void AGameStateMenu::ProcessInputMain(APlayerControllerMenu const* PlayerControllerMenu) const
 {
-	CurScreen->HandleInputMain(ControllerIndex(PlayerControllerMenu));
+	ScreenManager->HandleInputMain(ControllerIndex(PlayerControllerMenu));
 }
 
 void AGameStateMenu::ProcessInputAlt(APlayerControllerMenu const* PlayerControllerMenu) const
 {
-	CurScreen->HandleInputAlt(ControllerIndex(PlayerControllerMenu));
+	ScreenManager->HandleInputAlt(ControllerIndex(PlayerControllerMenu));
 }
 
 void AGameStateMenu::ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const
 {
-	CurScreen->HandleInputBack(ControllerIndex(PlayerControllerMenu));
+	ScreenManager->HandleInputBack(ControllerIndex(PlayerControllerMenu));
 }
 
 static bool PlayerStateMenuIsTeam(APlayerState* const PlayerState, ETeam const Team)
