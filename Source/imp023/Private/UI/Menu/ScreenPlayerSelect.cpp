@@ -1,6 +1,6 @@
 // Copyright 2024 Impending Technologies
 
-#include "UI/Menu/UI_PlayerSelect.h"
+#include "UI/Menu/ScreenPlayerSelect.h"
 
 #include "Actor/Menu/GameStateMenu.h"
 #include "Component/CompTeam.h"
@@ -9,7 +9,7 @@
 
 static int constexpr GMaxSlot = 2;
 
-void UUI_PlayerSelect::NativeOnInitialized()
+void UScreenPlayerSelect::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
@@ -21,7 +21,7 @@ void UUI_PlayerSelect::NativeOnInitialized()
 
 static ETeam SlotToTeam[] = {ETeam::Home, ETeam::Away1, ETeam::Away2};
 
-void UUI_PlayerSelect::OnInputMain(int const PlayerIndex)
+void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
@@ -42,7 +42,7 @@ void UUI_PlayerSelect::OnInputMain(int const PlayerIndex)
 	}
 }
 
-void UUI_PlayerSelect::OnInputAlt(int const PlayerIndex)
+void UScreenPlayerSelect::OnInputAlt(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
@@ -54,7 +54,7 @@ void UUI_PlayerSelect::OnInputAlt(int const PlayerIndex)
 	Advance(PlayerIndex, false);
 }
 
-void UUI_PlayerSelect::Advance(int const PlayerIndex, bool const IsHuman)
+void UScreenPlayerSelect::Advance(int const PlayerIndex, bool const IsHuman)
 {
 	TWeakObjectPtr<UTextBlock> const CurText = TextFromSlot(TrackedSlotIndex);
 	CurText->SetText(IsHuman ? FText::Format(INVTEXT("PLAYER {0}"), PlayerIndex) : INVTEXT("CPU"));
@@ -68,7 +68,7 @@ void UUI_PlayerSelect::Advance(int const PlayerIndex, bool const IsHuman)
 	}
 }
 
-void UUI_PlayerSelect::OnInputBack(int const PlayerIndex)
+void UScreenPlayerSelect::OnInputBack(int const PlayerIndex)
 {
 	if (TrackedSlotIndex == 0)
 	{
@@ -93,7 +93,7 @@ void UUI_PlayerSelect::OnInputBack(int const PlayerIndex)
 	PrevText->SetText(INVTEXT("CHOOSE"));
 }
 
-TWeakObjectPtr<UTextBlock> UUI_PlayerSelect::TextFromSlot(uint const SlotIndex) const
+TWeakObjectPtr<UTextBlock> UScreenPlayerSelect::TextFromSlot(uint const SlotIndex) const
 {
 	switch (SlotIndex)
 	{

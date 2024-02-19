@@ -21,7 +21,7 @@ void APlayerControllerGameplay::BeginPlay()
 	Super::BeginPlay();
 
 	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	OnStateChangeHandle = GameState->OnStateChange().AddUObject(this, &APlayerControllerGameplay::OnStateChange);
+	OnStateChangeHandle = GameState->StateChangeEvent.AddUObject(this, &APlayerControllerGameplay::OnStateChange);
 
 	if (ULocalPlayer const* LocalPlayer = Cast<ULocalPlayer>(Player))
 	{
@@ -45,7 +45,7 @@ void APlayerControllerGameplay::EndPlay(EEndPlayReason::Type const EndPlayReason
 	Super::EndPlay(EndPlayReason);
 
 	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	GameState->OnStateChange().Remove(OnStateChangeHandle);
+	GameState->StateChangeEvent.Remove(OnStateChangeHandle);
 }
 
 void APlayerControllerGameplay::SetupInputComponent()
@@ -73,6 +73,10 @@ void APlayerControllerGameplay::ActionBoost(FInputActionValue const& InputAction
 {
 	if(!bCanMove)
 	{
+		AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+		check(GameState);
+
+		GameState->ProcessInputMain(this);
 		return;
 	}
 	APlayerPawn const* const PlayerPawn = Cast<APlayerPawn>(GetPawn());

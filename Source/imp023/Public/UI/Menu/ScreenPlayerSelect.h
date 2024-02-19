@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "UI/Manager/Screen.h"
-#include "UI_PlayerSelect.generated.h"
+#include "ScreenPlayerSelect.generated.h"
 
 class UTextBlock;
 /**
  *
  */
 UCLASS()
-class IMP023_API UUI_PlayerSelect : public UScreen
+class IMP023_API UScreenPlayerSelect : public UScreen
 {
 	GENERATED_BODY()
 

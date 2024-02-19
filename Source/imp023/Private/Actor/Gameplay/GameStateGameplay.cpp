@@ -11,6 +11,10 @@ void AGameStateGameplay::BeginPlay()
 {
 	Super::BeginPlay();
 
+	check(BPScreenManager);
+	ScreenManager = NewObject<UScreenManager>(this, BPScreenManager);;
+	check(ScreenManager);
+
 	SetState(EGameplayGameState::PreMatch);
 }
 
@@ -52,13 +56,14 @@ void AGameStateGameplay::ScoreGoal(ETeam const Team)
 		Score[static_cast<int>(ETeam::Away2)] += CurrentTeamTouched == ETeam::Away2 ? 0 : 1;
 	}
 
-	UpdateScoresEvent.Broadcast(Score);
-
-	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
-
-	GameMode->ResetActorsForZone(EZone::Middle, EZone::Middle);
+	BroadcastScores();
 
 	SetState(EGameplayGameState::PostPlay);
+}
+
+void AGameStateGameplay::BroadcastScores() const
+{
+	UpdateScoresEvent.Broadcast(Score);
 }
 
 void AGameStateGameplay::ResetGameplay()
@@ -77,7 +82,8 @@ void AGameStateGameplay::SetState_PreMatch()
 {
 	Period = 0;
 	Score.Init(0, 4);
-	SetState(EGameplayGameState::PrePeriod);
+
+	ScreenManager->NavigateTo("PreMatch");
 }
 
 void AGameStateGameplay::SetState_PrePeriod()
@@ -85,10 +91,10 @@ void AGameStateGameplay::SetState_PrePeriod()
 	Period += 1;
 
 	FTimerManager& TM = GetWorld()->GetTimerManager();
-	TM.SetTimer(TimerPeriod, this, &AGameStateGameplay::OnPeriodEnd, 90.0f);
+	TM.SetTimer(TimerPeriod, [&] { SetState(EGameplayGameState::PostPeriod); }, 90.0f, false);
 	TM.PauseTimer(TimerPeriod);
 
-	SetState(EGameplayGameState::PrePlay);
+	ScreenManager->NavigateTo("PrePeriod");
 }
 
 void AGameStateGameplay::SetState_PrePlay()
@@ -96,6 +102,7 @@ void AGameStateGameplay::SetState_PrePlay()
 	GetWorld()->GetTimerManager().PauseTimer(TimerPeriod);
 	ResetGameplay();
 
+	ScreenManager->NavigateTo("HUD");
 	DelayedStateChange(EGameplayGameState::Play, 3.0f);
 }
 
@@ -108,16 +115,19 @@ void AGameStateGameplay::SetState_PostPlay()
 {
 	GetWorld()->GetTimerManager().PauseTimer(TimerPeriod);
 
+	ScreenManager->NavigateTo("Goal");
+
 	DelayedStateChange(EGameplayGameState::PrePlay, 3.0f);
 }
 
 void AGameStateGameplay::SetState_PostPeriod()
 {
-	DelayedStateChange(EGameplayGameState::PrePeriod, 3.0f);
+	ScreenManager->NavigateTo("PostPeriod");;
 }
 
 void AGameStateGameplay::SetState_PostMatch()
 {
+	ScreenManager->NavigateTo("PostMatch");
 }
 
 void AGameStateGameplay::SetState(EGameplayGameState const State)
@@ -159,17 +169,16 @@ APlayerController* AGameStateGameplay::GetPlayerControllerFromTeam(ETeam const T
 	return nullptr;
 }
 
+void AGameStateGameplay::ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay)
+{
+	ScreenManager->HandleInputMain(0);	// ignore which player clicked for now
+}
+
 void AGameStateGameplay::DelayedStateChange(EGameplayGameState const NewState, float const Delay)
 {
 	FTimerHandle Timer;
 	GetWorld()->GetTimerManager().SetTimer(Timer, [&, NewState] { SetState(NewState); }, Delay, false);
 }
-
-void AGameStateGameplay::OnPeriodEnd()
-{
-	SetState(EGameplayGameState::PrePeriod);
-}
-
 
 bool AGameStateGameplay::IsState(EGameplayGameState const State) const
 {

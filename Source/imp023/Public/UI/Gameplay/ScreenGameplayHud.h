@@ -3,15 +3,15 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Blueprint/UserWidget.h"
-#include "UI_GameplayHud.generated.h"
+#include "UI/Manager/Screen.h"
+#include "ScreenGameplayHud.generated.h"
 
 class UTextBlock;
 /**
  *
  */
 UCLASS()
-class IMP023_API UUI_GameplayHud : public UUserWidget
+class IMP023_API UScreenGameplayHud : public UScreen
 {
 	GENERATED_BODY()
 

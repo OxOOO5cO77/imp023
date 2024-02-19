@@ -20,7 +20,7 @@ void ABall::BeginPlay()
 	Super::BeginPlay();
 
 	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	OnStateChangeHandle = GameState->OnStateChange().AddUObject(this, &ABall::OnStateChange);
+	OnStateChangeHandle = GameState->StateChangeEvent.AddUObject(this, &ABall::OnStateChange);
 }
 
 void ABall::EndPlay(EEndPlayReason::Type const EndPlayReason)
@@ -28,7 +28,7 @@ void ABall::EndPlay(EEndPlayReason::Type const EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 
 	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	GameState->OnStateChange().Remove(OnStateChangeHandle);;
+	GameState->StateChangeEvent.Remove(OnStateChangeHandle);;
 }
 
 FVector ABall::GetLocationTargetForBoost(FVector const& Source) const

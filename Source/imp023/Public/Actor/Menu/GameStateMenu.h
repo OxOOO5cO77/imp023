@@ -33,7 +33,7 @@ private:
 	int ControllerIndex(APlayerControllerMenu const* const PlayerControllerMenu) const;
 
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ScreenManager", meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<UScreenManager> BPScreenManager;
 
 	UPROPERTY()

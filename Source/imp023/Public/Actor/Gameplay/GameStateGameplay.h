@@ -6,7 +6,10 @@
 #include "Component/CompTeam.h"
 #include "Component/CompZone.h"
 #include "GameFramework/GameStateBase.h"
+#include "UI/Manager/ScreenManager.h"
 #include "GameStateGameplay.generated.h"
+
+class APlayerControllerGameplay;
 
 UENUM(BlueprintType)
 enum class EGameplayGameState : uint8
@@ -37,8 +40,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	FStateChangeEvent& OnStateChange() { return StateChangeEvent; }
-	FUpdateScoresEvent& OnUpdateScores() { return UpdateScoresEvent; }
+	FStateChangeEvent StateChangeEvent;
+	FUpdateScoresEvent UpdateScoresEvent;
 
 public:
 	UFUNCTION(BlueprintPure)
@@ -58,13 +61,13 @@ public:
 	void ChangeZone(EZone const Zone);
 	void ScoreGoal(ETeam const Team);
 	void ResetGameplay();
+	void BroadcastScores() const;
 	void SetState(EGameplayGameState const State);
 	APlayerController* GetPlayerControllerFromTeam(ETeam const Team);
+	void ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay);
 
 private:
 	FTimerHandle TimerPeriod;
-	FStateChangeEvent StateChangeEvent;
-	FUpdateScoresEvent UpdateScoresEvent;
 
 private:
 	EGameplayGameState CurrentGameState;
@@ -82,7 +85,13 @@ private:
 	void SetState_PostPeriod();
 	void SetState_PostMatch();
 
-	void OnPeriodEnd();
-
 	void DelayedStateChange(EGameplayGameState NewState, float Delay);
+
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="ScreenManager", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UScreenManager> BPScreenManager;
+
+	UPROPERTY()
+	UScreenManager* ScreenManager;
+
 };

@@ -1,34 +1,34 @@
 // Copyright 2024 Impending Technologies
 
-#include "UI/Gameplay/UI_GameplayHud.h"
+#include "UI/Gameplay/ScreenGameplayHud.h"
 
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
 
-void UUI_GameplayHud::NativeOnInitialized()
+void UScreenGameplayHud::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
 	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
-	if (GameState)
-	{
-		OnUpdateScoresHandle = GameState->OnUpdateScores().AddUObject(this, &UUI_GameplayHud::OnUpdateScores);
-	}
+	check(GameState);
+
+	OnUpdateScoresHandle = GameState->UpdateScoresEvent.AddUObject(this, &UScreenGameplayHud::OnUpdateScores);
+	GameState->BroadcastScores();
 }
 
-void UUI_GameplayHud::NativeDestruct()
+void UScreenGameplayHud::NativeDestruct()
 {
 	Super::NativeDestruct();
 
 	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
 	if (GameState)
 	{
-		GameState->OnUpdateScores().Remove(OnUpdateScoresHandle);
+		GameState->UpdateScoresEvent.Remove(OnUpdateScoresHandle);
 	}
 }
 
-void UUI_GameplayHud::OnUpdateScores(TArray<int> const& Scores) const
+void UScreenGameplayHud::OnUpdateScores(TArray<int> const& Scores) const
 {
 	FNumberFormattingOptions Format = FNumberFormattingOptions();
 	Format.SetMinimumIntegralDigits(2);

@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "UI/Manager/Screen.h"
-#include "UI_MainMenu.generated.h"
+#include "ScreenPreMatch.generated.h"
 
-class UButton;
 /**
  *
  */
 UCLASS()
-class IMP023_API UUI_MainMenu : public UScreen
+class IMP023_API UScreenPreMatch : public UScreen
 {
 	GENERATED_BODY()
 
