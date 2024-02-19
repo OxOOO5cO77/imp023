@@ -7,6 +7,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "Utils/GameplayUtils.h"
 
+float constexpr GSecondsPerPeriod = 90.0f;
+
 void AGameStateGameplay::BeginPlay()
 {
 	Super::BeginPlay();
@@ -91,7 +93,7 @@ void AGameStateGameplay::SetState_PrePeriod()
 	Period += 1;
 
 	FTimerManager& TM = GetWorld()->GetTimerManager();
-	TM.SetTimer(TimerPeriod, [&] { SetState(EGameplayGameState::PostPeriod); }, 90.0f, false);
+	TM.SetTimer(TimerPeriod, [&] { SetState(EGameplayGameState::PostPeriod); }, GSecondsPerPeriod, false);
 	TM.PauseTimer(TimerPeriod);
 
 	ScreenManager->NavigateTo("PrePeriod");
@@ -169,15 +171,24 @@ APlayerController* AGameStateGameplay::GetPlayerControllerFromTeam(ETeam const T
 	return nullptr;
 }
 
-void AGameStateGameplay::ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay)
+void AGameStateGameplay::ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay) const
 {
 	ScreenManager->HandleInputMain(0);	// ignore which player clicked for now
 }
 
+float AGameStateGameplay::GetTimerDelayRemaining() const
+{
+	return GetWorld()->GetTimerManager().GetTimerRemaining(TimerDelay);
+}
+
+float AGameStateGameplay::GetPeriodTimeRemainingPercent() const
+{
+	return GetWorld()->GetTimerManager().GetTimerRemaining(TimerPeriod) / GSecondsPerPeriod;
+}
+
 void AGameStateGameplay::DelayedStateChange(EGameplayGameState const NewState, float const Delay)
 {
-	FTimerHandle Timer;
-	GetWorld()->GetTimerManager().SetTimer(Timer, [&, NewState] { SetState(NewState); }, Delay, false);
+	GetWorld()->GetTimerManager().SetTimer(TimerDelay, [&, NewState] { SetState(NewState); }, Delay, false);
 }
 
 bool AGameStateGameplay::IsState(EGameplayGameState const State) const

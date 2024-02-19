@@ -6,6 +6,8 @@
 #include "UI/Manager/Screen.h"
 #include "ScreenGameplayHud.generated.h"
 
+class AGameStateGameplay;
+class UProgressBar;
 class UTextBlock;
 /**
  *
@@ -18,11 +20,17 @@ class IMP023_API UScreenGameplayHud : public UScreen
 protected:
 	virtual void NativeOnInitialized() override;
 	virtual void NativeDestruct() override;
+	virtual void NativeTick(FGeometry const& MyGeometry, float InDeltaTime) override;
 
 private:
 	void OnUpdateScores(TArray<int> const& Scores) const;
+	void HandleDelayTimer();
+	void HandlePeriodTimer() const;
 
 private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Timer", meta = (AllowPrivateAccess = "true"))
+	UTextBlock* TextDelay;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score", meta = (AllowPrivateAccess = "true"))
 	UTextBlock* TextScoreHome;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score", meta = (AllowPrivateAccess = "true"))
@@ -30,6 +38,18 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Score", meta = (AllowPrivateAccess = "true"))
 	UTextBlock* TextScoreAway2;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Period", meta = (AllowPrivateAccess = "true"))
+	UProgressBar* BarPeriod1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Period", meta = (AllowPrivateAccess = "true"))
+	UProgressBar* BarPeriod2;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Period", meta = (AllowPrivateAccess = "true"))
+	UProgressBar* BarPeriod3;
+
 private:
+	UPROPERTY()
+	AGameStateGameplay* GameState;
+
 	FDelegateHandle OnUpdateScoresHandle;
+
+	bool bDelayTimer;
 };

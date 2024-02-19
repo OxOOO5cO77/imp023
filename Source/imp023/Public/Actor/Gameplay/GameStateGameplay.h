@@ -64,10 +64,13 @@ public:
 	void BroadcastScores() const;
 	void SetState(EGameplayGameState const State);
 	APlayerController* GetPlayerControllerFromTeam(ETeam const Team);
-	void ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay);
+	void ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay) const;
+	float GetTimerDelayRemaining() const;
+	float GetPeriodTimeRemainingPercent() const;
 
 private:
 	FTimerHandle TimerPeriod;
+	FTimerHandle TimerDelay;
 
 private:
 	EGameplayGameState CurrentGameState;
@@ -93,5 +96,4 @@ private:
 
 	UPROPERTY()
 	UScreenManager* ScreenManager;
-
 };
