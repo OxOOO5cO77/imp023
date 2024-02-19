@@ -24,11 +24,10 @@ void AGameStateGameplay::ChangeZone(EZone const Zone)
 {
 	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
 
-	GameMode->ResetActorsForZone(Zone, CurrentZone);	// reset players in the leaving zone (CurrentZone) as if the ball was coming from the new zone (Zone)
-	GameMode->HandlePossession(Zone);
-
 	PreviousZone = CurrentZone;
 	CurrentZone = Zone;
+
+	ChangeZoneEvent.Broadcast(PreviousZone, CurrentZone);
 }
 
 void AGameStateGameplay::SetCurrentTeamTouched(ETeam const Team)

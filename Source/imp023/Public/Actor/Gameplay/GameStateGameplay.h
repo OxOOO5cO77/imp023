@@ -27,6 +27,7 @@ enum class EGameplayGameState : uint8
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FStateChangeEvent, EGameplayGameState);
 DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateScoresEvent, TArray<int> const&);
+DECLARE_MULTICAST_DELEGATE_TwoParams(FChangeZoneEvent, EZone, EZone);
 
 /**
  *
@@ -42,6 +43,7 @@ protected:
 public:
 	FStateChangeEvent StateChangeEvent;
 	FUpdateScoresEvent UpdateScoresEvent;
+	FChangeZoneEvent ChangeZoneEvent;
 
 public:
 	UFUNCTION(BlueprintPure)

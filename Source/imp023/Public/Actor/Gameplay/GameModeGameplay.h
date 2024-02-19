@@ -20,12 +20,18 @@ class IMP023_API AGameModeGameplay : public AGameModeBase
 
 public:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
 	static void PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team);
+	void OnChangeZone(EZone const PreviousZone, EZone const CurrentZone) const;
 
 public:
 	void ResetActorsForAllZones() const;
 	void ResetActorsForZone(EZone const ZoneFrom, EZone const ZoneTo) const;
 	void HandlePossession(EZone const Zone) const;
+
+private:
+	FDelegateHandle OnChangeZoneHandle;
+
 };

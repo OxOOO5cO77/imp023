@@ -22,6 +22,8 @@ void AGameModeGameplay::BeginPlay()
 	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
 	check(GameState);
 
+	OnChangeZoneHandle = GameState->ChangeZoneEvent.AddUObject(this, &AGameModeGameplay::OnChangeZone);
+
 	for (AActor const* Start : Starts)
 	{
 		UCompLocator const* const StartLocator = Cast<UCompLocator>(Start->GetComponentByClass(UCompLocator::StaticClass()));
@@ -48,6 +50,16 @@ void AGameModeGameplay::BeginPlay()
 	}
 }
 
+void AGameModeGameplay::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+
+	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
+	check(GameState);
+
+	GameState->ChangeZoneEvent.Remove(OnChangeZoneHandle);
+}
+
 void AGameModeGameplay::PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team)
 {
 	APlayerController* const Controller = GameState->GetPlayerControllerFromTeam(Team);
@@ -57,6 +69,12 @@ void AGameModeGameplay::PossessWithTeam(AGameStateGameplay* const GameState, APl
 		Controller->bAutoManageActiveCameraTarget = false;
 		Controller->Possess(Player);
 	}
+}
+
+void AGameModeGameplay::OnChangeZone(EZone const PreviousZone, EZone const CurrentZone) const
+{
+	ResetActorsForZone(CurrentZone, PreviousZone);	// reset players in the leaving zone (PreviousZone) as if the ball was coming from the new zone (CurrentZone)
+	HandlePossession(CurrentZone);
 }
 
 static bool IsInZone(AActor const* const Actor, EZone const Zone)
@@ -104,7 +122,7 @@ void AGameModeGameplay::ResetActorsForAllZones() const
 			continue;
 		}
 
-		AActor** const Result = Players.FindByPredicate([Zone,Team](AActor const* const PlayerPawn) ->bool { return IsOnTeam(PlayerPawn,Team) && IsInZone(PlayerPawn,Zone);});
+		AActor** const Result = Players.FindByPredicate([Zone,Team](AActor const* const PlayerPawn) -> bool { return IsOnTeam(PlayerPawn, Team) && IsInZone(PlayerPawn, Zone); });
 		if (Result == nullptr)
 		{
 			continue;
