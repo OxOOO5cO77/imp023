@@ -19,6 +19,7 @@ APlayerPawn::APlayerPawn()
 	CompTeam = CreateDefaultSubobject<UCompTeam>(TEXT("Team"));
 	CompLocator = CreateDefaultSubobject<UCompLocator>(TEXT("Locator"));
 	CompZone = CreateDefaultSubobject<UCompZone>(TEXT("Zone"));
+
 }
 
 // Called when the game starts or when spawned
@@ -61,6 +62,13 @@ void APlayerPawn::InitComponents(EZone const Zone, ELocator const Locator, ETeam
 	CompZone->Set(Zone);
 	CompLocator->Set(Locator);
 	CompTeam->Set(Team);
+
+	AGameStateGameplay const* const GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	FLinearColor const Color = GameState->GetTeamColor(CompTeam->Get());
+
+	UMaterialInstanceDynamic* Material = CompStaticMeshBase->CreateDynamicMaterialInstance(0);
+	Material->SetVectorParameterValue("TeamColor", Color);
+	CompStaticMeshBase->SetMaterial(0, Material);
 }
 
 void APlayerPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, FHitResult const& Hit)

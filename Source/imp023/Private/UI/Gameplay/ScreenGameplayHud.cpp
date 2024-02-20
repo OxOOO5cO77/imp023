@@ -21,9 +21,9 @@ void UScreenGameplayHud::NativeOnInitialized()
 	BarPeriod2->SetPercent(GameState->Period <= 2 ? 1.0f : 0.0f);
 	BarPeriod3->SetPercent(GameState->Period <= 3 ? 1.0f : 0.0f);
 
-	BarPeriod1->SetFillColorAndOpacity(GameState->GetTeamColor(ETeam::Home));
-	BarPeriod2->SetFillColorAndOpacity(GameState->GetTeamColor(ETeam::Away1));
-	BarPeriod3->SetFillColorAndOpacity(GameState->GetTeamColor(ETeam::Away2));
+	BarPeriod1->SetFillColorAndOpacity(GameState->GetTeamColorForPeriod(ETeam::Home));
+	BarPeriod2->SetFillColorAndOpacity(GameState->GetTeamColorForPeriod(ETeam::Away1));
+	BarPeriod3->SetFillColorAndOpacity(GameState->GetTeamColorForPeriod(ETeam::Away2));
 
 	bDelayTimer = true;
 }

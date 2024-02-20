@@ -53,7 +53,7 @@ public:
 	EZone GetCurrentZone() const;
 
 	UFUNCTION(BlueprintPure)
-	FLinearColor GetTeamColor(ETeam const Team) const;
+	FLinearColor GetTeamColorForPeriod(ETeam const Team) const;
 
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
@@ -72,6 +72,7 @@ public:
 	void ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay) const;
 	float GetTimerDelayRemaining() const;
 	float GetPeriodTimeRemainingPercent() const;
+	FLinearColor GetTeamColor(ETeam const Team) const;
 
 private:
 	FTimerHandle TimerPeriod;
