@@ -11,7 +11,7 @@ void APlayerControllerMenu::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameState = Cast<AGameStateMenu>(UGameplayStatics::GetGameState(this));
+	GameState = CastChecked<AGameStateMenu>(UGameplayStatics::GetGameState(this));
 
 	if (ULocalPlayer const* LocalPlayer = Cast<ULocalPlayer>(Player))
 	{
@@ -30,7 +30,6 @@ void APlayerControllerMenu::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	UEnhancedInputComponent* EnhancedInput = CastChecked<UEnhancedInputComponent>(InputComponent);
-	check(EnhancedInput);
 
 	EnhancedInput->BindAction(InputActionMain, ETriggerEvent::Started, this, &APlayerControllerMenu::ActionMain);
 	EnhancedInput->BindAction(InputActionAlt, ETriggerEvent::Started, this, &APlayerControllerMenu::ActionAlt);

@@ -18,7 +18,7 @@ void AVolumeZone::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
 }
 
 

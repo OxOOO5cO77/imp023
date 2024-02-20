@@ -19,9 +19,9 @@ EBTNodeResult::Type UBTTask_ImpulseTo::ExecuteTask(UBehaviorTreeComponent& Owner
 	FName const Key = GetSelectedBlackboardKey();
 
 	UBlackboardComponent const* const Blackboard = OwnerComp.GetBlackboardComponent();
-	AActor const* const Target = Cast<AActor>(Blackboard->GetValueAsObject(Key));
+	AActor const* const Target = CastChecked<AActor>(Blackboard->GetValueAsObject(Key));
 
-	APlayerPawn const* const Pawn = Cast<APlayerPawn>(OwnerComp.GetAIOwner()->GetPawn());
+	APlayerPawn const* const Pawn = CastChecked<APlayerPawn>(OwnerComp.GetAIOwner()->GetPawn());
 
 	FVector const Dir = UKismetMathLibrary::GetDirectionUnitVector(Pawn->GetActorLocation(), Target->GetActorLocation());
 

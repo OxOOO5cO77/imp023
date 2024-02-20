@@ -22,8 +22,7 @@ void AMinimapManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	check(GameState);
+	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
 
 	OnChangeZoneHandle = GameState->ChangeZoneEvent.AddUObject(this, &AMinimapManager::OnChangeZone);
 }
@@ -32,8 +31,7 @@ void AMinimapManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	check(GameState);
+	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
 
 	GameState->ChangeZoneEvent.Remove(OnChangeZoneHandle);
 }

@@ -12,9 +12,8 @@ void UScreenPostPeriod::OnInputMain(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
-	check(GameState);
+	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
 
-	EGameplayGameState NewState = GameState->Period == 3 ? EGameplayGameState::PostMatch : EGameplayGameState::PrePeriod;
+	EGameplayGameState const NewState = GameState->Period == 3 ? EGameplayGameState::PostMatch : EGameplayGameState::PrePeriod;
 	GameState->SetState(NewState);
 }

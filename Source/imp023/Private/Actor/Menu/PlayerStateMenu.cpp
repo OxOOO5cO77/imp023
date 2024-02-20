@@ -14,8 +14,7 @@ void APlayerStateMenu::CopyProperties(APlayerState* PlayerState)
 {
 	Super::CopyProperties(PlayerState);
 
-	APlayerStateGameplay* PlayerStateGameplay = Cast<APlayerStateGameplay>(PlayerState);
-	check(PlayerStateGameplay);
+	APlayerStateGameplay* PlayerStateGameplay = CastChecked<APlayerStateGameplay>(PlayerState);
 
 	PlayerStateGameplay->Team = Team;
 }

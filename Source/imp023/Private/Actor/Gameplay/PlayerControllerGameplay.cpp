@@ -53,7 +53,6 @@ void APlayerControllerGameplay::SetupInputComponent()
 	Super::SetupInputComponent();
 
 	UEnhancedInputComponent* EnhancedInput = CastChecked<UEnhancedInputComponent>(InputComponent);
-	check(EnhancedInput);
 
 	EnhancedInput->BindAction(InputActionMove, ETriggerEvent::Triggered, this, &APlayerControllerGameplay::ActionMove);
 	EnhancedInput->BindAction(InputActionBoost, ETriggerEvent::Started, this, &APlayerControllerGameplay::ActionBoost);
@@ -73,8 +72,7 @@ void APlayerControllerGameplay::ActionBoost(FInputActionValue const& InputAction
 {
 	if(!bCanMove)
 	{
-		AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-		check(GameState);
+		AGameStateGameplay const* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
 
 		GameState->ProcessInputMain(this);
 		return;

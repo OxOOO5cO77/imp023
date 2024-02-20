@@ -10,8 +10,7 @@ void UScreenPreMatch::OnInputMain(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
-	check(GameState);
+	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
 
 	GameState->SetState(EGameplayGameState::PrePeriod);
 }
