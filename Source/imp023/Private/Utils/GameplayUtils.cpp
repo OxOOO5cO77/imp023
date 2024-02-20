@@ -5,33 +5,33 @@
 static ETeam const* MapZonesToTeam(EZone const ZoneFrom, EZone const ZoneTo)
 {
 	//								ignore		north		east		   south		west
-	static ETeam A1A2NoHo[5] = {ETeam::None, ETeam::Away1, ETeam::Away2, ETeam::None, ETeam::Home};
-	static ETeam A1A2HoNo[5] = {ETeam::None, ETeam::Away1, ETeam::Away2, ETeam::Home, ETeam::None};
-	static ETeam NoA2A1Ho[5] = {ETeam::None, ETeam::None, ETeam::Away2, ETeam::Away1, ETeam::Home};
-	static ETeam A1NoA2Ho[5] = {ETeam::None, ETeam::Away1, ETeam::None, ETeam::Away2, ETeam::Home};
+	static ETeam HoA2NoA1[5] = {ETeam::None, ETeam::Home, ETeam::Away2, ETeam::None, ETeam::Away1};
+	static ETeam HoA2A1No[5] = {ETeam::None, ETeam::Home, ETeam::Away2, ETeam::Away1, ETeam::None};
+	static ETeam NoA2HoA1[5] = {ETeam::None, ETeam::None, ETeam::Away2, ETeam::Home, ETeam::Away1};
+	static ETeam HoNoA2A1[5] = {ETeam::None, ETeam::Home, ETeam::None, ETeam::Away2, ETeam::Away1};
 
 	switch (ZoneTo)
 	{
 		case EZone::North:
-			return A1A2NoHo;
+			return HoA2NoA1;
 		case EZone::East:
-			return A1A2HoNo;
+			return HoA2A1No;
 		case EZone::South:
-			return NoA2A1Ho;
+			return NoA2HoA1;
 		case EZone::West:
-			return A1NoA2Ho;
+			return HoNoA2A1;
 		case EZone::Middle:
 			switch (ZoneFrom)
 			{
 				case EZone::Middle:
 				case EZone::South:
-					return A1A2NoHo;
+					return HoA2NoA1;
 				case EZone::North:
-					return NoA2A1Ho;
+					return NoA2HoA1;
 				case EZone::East:
-					return A1NoA2Ho;
+					return HoNoA2A1;
 				case EZone::West:
-					return A1A2HoNo;
+					return HoA2A1No;
 			}
 			break;
 	}
@@ -53,11 +53,11 @@ ETeam FGameplayUtils::MapPeriodTeamToTeam(int const Period, ETeam const Source)
 			switch (Source)
 			{
 				case ETeam::Home:
-					return ETeam::Away2;
-				case ETeam::Away1:
-					return ETeam::Home;
-				case ETeam::Away2:
 					return ETeam::Away1;
+				case ETeam::Away1:
+					return ETeam::Away2;
+				case ETeam::Away2:
+					return ETeam::Home;
 				default:
 					break;
 			}
@@ -66,11 +66,11 @@ ETeam FGameplayUtils::MapPeriodTeamToTeam(int const Period, ETeam const Source)
 			switch (Source)
 			{
 				case ETeam::Home:
-					return ETeam::Away1;
-				case ETeam::Away1:
 					return ETeam::Away2;
-				case ETeam::Away2:
+				case ETeam::Away1:
 					return ETeam::Home;
+				case ETeam::Away2:
+					return ETeam::Away1;
 				default:
 					break;
 			}

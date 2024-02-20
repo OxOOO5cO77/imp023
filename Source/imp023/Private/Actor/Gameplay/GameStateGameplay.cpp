@@ -22,8 +22,6 @@ void AGameStateGameplay::BeginPlay()
 
 void AGameStateGameplay::ChangeZone(EZone const Zone)
 {
-	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
-
 	PreviousZone = CurrentZone;
 	CurrentZone = Zone;
 
@@ -198,4 +196,19 @@ bool AGameStateGameplay::IsState(EGameplayGameState const State) const
 EZone AGameStateGameplay::GetCurrentZone() const
 {
 	return CurrentZone;
+}
+
+FLinearColor AGameStateGameplay::GetTeamColor(ETeam const Team) const
+{
+	switch (FGameplayUtils::MapPeriodTeamToTeam(Period, Team))
+	{
+		case ETeam::Home:
+			return FLinearColor::Green;
+		case ETeam::Away1:
+			return FLinearColor::Red;
+		case ETeam::Away2:
+			return FLinearColor::Blue;
+		default:
+			return FLinearColor::White;
+	}
 }

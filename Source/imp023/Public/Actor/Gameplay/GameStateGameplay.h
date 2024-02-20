@@ -52,6 +52,9 @@ public:
 	UFUNCTION(BlueprintPure)
 	EZone GetCurrentZone() const;
 
+	UFUNCTION(BlueprintPure)
+	FLinearColor GetTeamColor(ETeam const Team) const;
+
 public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	int Period;
