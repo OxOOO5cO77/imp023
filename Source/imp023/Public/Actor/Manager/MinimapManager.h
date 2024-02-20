@@ -7,6 +7,8 @@
 #include "GameFramework/Actor.h"
 #include "MinimapManager.generated.h"
 
+class ASceneCapture2D;
+
 UCLASS()
 class IMP023_API AMinimapManager : public AActor
 {
@@ -22,11 +24,9 @@ protected:
 private:
 	void OnChangeZone(EZone PreviousZone, EZone CurrentZone) const;
 
-	static void SetCameraCaptureEnabled(ACameraActor const* const Camera, bool const bEnabled);
-
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minimap Cameras", meta = (AllowPrivateAccess = "true"))
-	TMap<EZone, ACameraActor*> Cameras;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Minimap Captures", meta = (AllowPrivateAccess = "true"))
+	TMap<EZone, ASceneCapture2D*> Minimaps;
 
 private:
 	FDelegateHandle OnChangeZoneHandle;
