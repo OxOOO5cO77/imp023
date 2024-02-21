@@ -5,6 +5,7 @@
 #include "Actor/Gameplay/GameModeGameplay.h"
 #include "Actor/Gameplay/PlayerStateGameplay.h"
 #include "Kismet/GameplayStatics.h"
+#include "Subsystem/TeamStateSubsystem.h"
 #include "Utils/GameplayUtils.h"
 
 float constexpr GSecondsPerPeriod = 90.0f;
@@ -183,21 +184,6 @@ float AGameStateGameplay::GetPeriodTimeRemainingPercent() const
 	return GetWorld()->GetTimerManager().GetTimerRemaining(TimerPeriod) / GSecondsPerPeriod;
 }
 
-FLinearColor AGameStateGameplay::GetTeamColor(ETeam const Team) const
-{
-	switch (Team)
-	{
-		case ETeam::Home:
-			return FLinearColor::Green;
-		case ETeam::Away1:
-			return FLinearColor::Red;
-		case ETeam::Away2:
-			return FLinearColor::Blue;
-		default:
-			return FLinearColor::White;
-	}
-}
-
 void AGameStateGameplay::DelayedStateChange(EGameplayGameState const NewState, float const Delay)
 {
 	GetWorld()->GetTimerManager().SetTimer(TimerDelay, [&, NewState] { SetState(NewState); }, Delay, false);
@@ -215,5 +201,7 @@ EZone AGameStateGameplay::GetCurrentZone() const
 
 FLinearColor AGameStateGameplay::GetTeamColorForPeriod(ETeam const Team) const
 {
-	return GetTeamColor(FGameplayUtils::MapPeriodTeamToTeam(Period, Team));
+	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	check(TeamStateSubsystem);
+	return TeamStateSubsystem->GetColor(FGameplayUtils::MapPeriodTeamToTeam(Period, Team));
 }

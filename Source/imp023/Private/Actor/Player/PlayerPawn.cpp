@@ -6,6 +6,7 @@
 #include "Actor/Object/Ball.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Subsystem/TeamStateSubsystem.h"
 
 // Sets default values
 APlayerPawn::APlayerPawn()
@@ -63,8 +64,8 @@ void APlayerPawn::InitComponents(EZone const Zone, ELocator const Locator, ETeam
 	CompLocator->Set(Locator);
 	CompTeam->Set(Team);
 
-	AGameStateGameplay const* const GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-	FLinearColor const Color = GameState->GetTeamColor(CompTeam->Get());
+	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	FLinearColor const Color = TeamStateSubsystem->GetColor(CompTeam->Get());
 
 	UMaterialInstanceDynamic* Material = CompStaticMeshBase->CreateDynamicMaterialInstance(0);
 	Material->SetVectorParameterValue("TeamColor", Color);

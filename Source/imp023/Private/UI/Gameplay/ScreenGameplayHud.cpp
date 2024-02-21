@@ -3,9 +3,11 @@
 #include "UI/Gameplay/ScreenGameplayHud.h"
 
 #include "Actor/Gameplay/GameStateGameplay.h"
+#include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Subsystem/TeamStateSubsystem.h"
 
 void UScreenGameplayHud::NativeOnInitialized()
 {
@@ -21,9 +23,16 @@ void UScreenGameplayHud::NativeOnInitialized()
 	BarPeriod2->SetPercent(GameState->Period <= 2 ? 1.0f : 0.0f);
 	BarPeriod3->SetPercent(GameState->Period <= 3 ? 1.0f : 0.0f);
 
-	BarPeriod1->SetFillColorAndOpacity(GameState->GetTeamColorForPeriod(ETeam::Home));
-	BarPeriod2->SetFillColorAndOpacity(GameState->GetTeamColorForPeriod(ETeam::Away1));
-	BarPeriod3->SetFillColorAndOpacity(GameState->GetTeamColorForPeriod(ETeam::Away2));
+	UTeamStateSubsystem* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	check(TeamStateSubsystem);
+
+	BarPeriod1->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Home));
+	BarPeriod2->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Away1));
+	BarPeriod3->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Away2));
+
+	ImageLogoHome->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Home));
+	ImageLogoAway1->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Away1));
+	ImageLogoAway2->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Away2));
 
 	bDelayTimer = true;
 }

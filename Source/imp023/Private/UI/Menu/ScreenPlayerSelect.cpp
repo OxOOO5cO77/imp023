@@ -4,10 +4,13 @@
 
 #include "Actor/Menu/GameStateMenu.h"
 #include "Component/CompTeam.h"
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Kismet/GameplayStatics.h"
+#include "Subsystem/TeamStateSubsystem.h"
 
-static int constexpr GMaxSlot = 2;
+static constexpr int GMaxSlot = 2;
+static constexpr ETeam SlotToTeam[] = {ETeam::Home, ETeam::Away1, ETeam::Away2};
 
 void UScreenPlayerSelect::NativeOnInitialized()
 {
@@ -17,9 +20,43 @@ void UScreenPlayerSelect::NativeOnInitialized()
 	TextAway2->SetVisibility(ESlateVisibility::Hidden);
 
 	TrackedSlotIndex = 0;
+
+	UTeamStateSubsystem* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	check(TeamStateSubsystem);
+	TeamStateSubsystem->InitializeTeams();
+
+	for (ETeam const Team : SlotToTeam)
+	{
+		SetupTeam(Team);
+	}
 }
 
-static ETeam SlotToTeam[] = {ETeam::Home, ETeam::Away1, ETeam::Away2};
+void UScreenPlayerSelect::SetupTeam(ETeam const Team)
+{
+	UImage* Image = nullptr;
+
+	switch (Team)
+	{
+		case ETeam::None:
+			checkNoEntry();
+			break;
+		case ETeam::Home:
+			Image = ImageHome;
+			break;
+		case ETeam::Away1:
+			Image = ImageAway1;
+			break;
+		case ETeam::Away2:
+			Image = ImageAway2;
+			break;
+	}
+
+	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	check(TeamStateSubsystem);
+
+	UTexture2D* Asset = TeamStateSubsystem->GetLogo(this, Team);
+	Image->SetBrushFromTexture(Asset);
+}
 
 void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 {
@@ -31,8 +68,7 @@ void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 		return;
 	}
 
-	AGameStateMenu* const GameState = Cast<AGameStateMenu>(UGameplayStatics::GetGameState(this));
-	check(GameState);
+	AGameStateMenu* const GameState = CastChecked<AGameStateMenu>(UGameplayStatics::GetGameState(this));
 
 	bool const Success = GameState->SetPlayerToTeam(PlayerIndex, SlotToTeam[TrackedSlotIndex]);
 

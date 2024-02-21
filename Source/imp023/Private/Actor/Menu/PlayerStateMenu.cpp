@@ -18,4 +18,3 @@ void APlayerStateMenu::CopyProperties(APlayerState* PlayerState)
 
 	PlayerStateGameplay->Team = Team;
 }
-

@@ -14,8 +14,10 @@ UCLASS()
 class IMP023_API APlayerStateGameplay : public APlayerState
 {
 	GENERATED_BODY()
+
 public:
 	APlayerStateGameplay();
+
 public:
 	ETeam Team;
 };

@@ -6,6 +6,7 @@
 #include "UI/Manager/Screen.h"
 #include "ScreenPrePeriod.generated.h"
 
+class UImage;
 class UTextBlock;
 /**
  *
@@ -24,4 +25,11 @@ protected:
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Period", meta = (AllowPrivateAccess = "true"))
 	UTextBlock* TextPeriod;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UImage* ImageHome;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UImage* ImageAway1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UImage* ImageAway2;
 };

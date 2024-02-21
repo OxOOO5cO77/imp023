@@ -72,7 +72,6 @@ public:
 	void ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay) const;
 	float GetTimerDelayRemaining() const;
 	float GetPeriodTimeRemainingPercent() const;
-	FLinearColor GetTeamColor(ETeam const Team) const;
 
 private:
 	FTimerHandle TimerPeriod;

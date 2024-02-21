@@ -6,6 +6,7 @@
 #include "UI/Manager/Screen.h"
 #include "ScreenGameplayHud.generated.h"
 
+class UImage;
 class AGameStateGameplay;
 class UProgressBar;
 class UTextBlock;
@@ -44,6 +45,13 @@ private:
 	UProgressBar* BarPeriod2;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Period", meta = (AllowPrivateAccess = "true"))
 	UProgressBar* BarPeriod3;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UImage* ImageLogoHome;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UImage* ImageLogoAway1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UImage* ImageLogoAway2;
 
 private:
 	UPROPERTY()

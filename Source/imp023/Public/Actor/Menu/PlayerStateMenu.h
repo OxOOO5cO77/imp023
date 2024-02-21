@@ -14,9 +14,11 @@ UCLASS()
 class IMP023_API APlayerStateMenu : public APlayerState
 {
 	GENERATED_BODY()
+
 public:
 	APlayerStateMenu();
 	virtual void CopyProperties(APlayerState* PlayerState) override;
+
 public:
 	ETeam Team;
 };
