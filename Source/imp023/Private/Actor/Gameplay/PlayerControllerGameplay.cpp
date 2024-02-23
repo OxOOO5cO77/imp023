@@ -77,7 +77,7 @@ void APlayerControllerGameplay::ActionBoost(FInputActionValue const& InputAction
 		GameState->ProcessInputMain(this);
 		return;
 	}
-	APlayerPawn const* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
+	APlayerPawn* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
 	PlayerPawn->Boost();
 }
 

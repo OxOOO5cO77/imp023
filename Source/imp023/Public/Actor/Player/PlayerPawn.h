@@ -6,7 +6,9 @@
 #include "Component/CompLocator.h"
 #include "Component/CompTeam.h"
 #include "Component/CompZone.h"
+#include "Data/PlayerData.h"
 #include "GameFramework/Pawn.h"
+#include "Subsystem/TeamStateSubsystem.h"
 #include "PlayerPawn.generated.h"
 
 class ABall;
@@ -21,12 +23,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void Tick(float DeltaSeconds) override;
 
 public:
-	void InitComponents(EZone const Zone, ELocator const Locator, ETeam const Team) const;
+	void InitComponents(EZone const Zone, ELocator const Locator, ETeam const Team);
 
 public:
-	void Boost() const;
+	void Boost();
 	void Move(FVector const& Dir) const;
 	void ResetTo(FVector const& Location);
 
@@ -35,6 +38,9 @@ public:
 private:
 	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, FHitResult const& Hit);
+
+private:
+	static UPhysicalMaterial* CreateMaterialFromPlayer(FPlayerData const* PlayerData);
 
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -49,4 +55,7 @@ private:
 
 	UPROPERTY()
 	ABall* Ball;
+
+	FPlayerData const* PlayerData;
+	float BoostLimiter;
 };

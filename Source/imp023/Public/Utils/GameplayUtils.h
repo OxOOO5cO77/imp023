@@ -5,10 +5,12 @@
 #include "Component/CompLocator.h"
 #include "Component/CompTeam.h"
 #include "Component/CompZone.h"
+#include "Data/PlayerData.h"
 
 class FGameplayUtils
 {
 public:
 	static ETeam MapZoneLocatorToTeamPeriod(EZone const ZoneFrom, EZone const ZoneTo, ELocator const Locator, int const Period);
 	static ETeam MapPeriodTeamToTeam(int const Period, ETeam const Source);
+	static EPlayerPosition MapZoneTeamToPlayerPosition(EZone const Zone, ETeam const Team);
 };

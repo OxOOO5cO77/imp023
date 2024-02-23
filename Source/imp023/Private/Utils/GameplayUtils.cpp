@@ -80,3 +80,54 @@ ETeam FGameplayUtils::MapPeriodTeamToTeam(int const Period, ETeam const Source)
 	}
 	return Source;
 }
+
+EPlayerPosition FGameplayUtils::MapZoneTeamToPlayerPosition(EZone const Zone, ETeam const Team)
+{
+	switch (Zone)
+	{
+		case EZone::Middle:
+			return EPlayerPosition::Center;
+		case EZone::North:
+			switch (Team)
+			{
+				case ETeam::Home:
+					return EPlayerPosition::Defend;
+				case ETeam::Away1:
+					return EPlayerPosition::Attack1;
+				case ETeam::Away2:
+					return EPlayerPosition::Attack2;
+				default:
+					break;
+			}
+			break;
+		case EZone::East:
+			switch (Team)
+			{
+				case ETeam::Home:
+					return EPlayerPosition::Attack1;
+				case ETeam::Away1:
+					return EPlayerPosition::Attack2;
+				case ETeam::Away2:
+					return EPlayerPosition::Defend;
+				default:
+					break;
+			}
+			break;
+		case EZone::South:
+			return EPlayerPosition::Frantic;
+		case EZone::West:
+			switch (Team)
+			{
+				case ETeam::Home:
+					return EPlayerPosition::Attack2;
+				case ETeam::Away1:
+					return EPlayerPosition::Defend;
+				case ETeam::Away2:
+					return EPlayerPosition::Attack1;
+				default:
+					break;
+			}
+			break;
+	}
+	return EPlayerPosition::Bench;
+}

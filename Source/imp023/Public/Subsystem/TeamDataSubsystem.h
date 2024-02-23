@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Data/PlayerData.h"
 #include "Data/TeamData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TeamDataSubsystem.generated.h"
@@ -23,5 +24,8 @@ public:
 	TArray<FTeamData> ChooseThree() const;
 
 private:
+	FPlayerData* P(uint32_t const ID);
+private:
 	TArray<FTeamData> TeamData;
+	TArray<FPlayerData> PlayerData;
 };

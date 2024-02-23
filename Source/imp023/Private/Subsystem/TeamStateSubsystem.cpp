@@ -31,3 +31,9 @@ FLinearColor UTeamStateSubsystem::GetColor(ETeam const Team) const
 	FTeamData const& TeamData = TeamMap[Team];
 	return TeamData.Color;
 }
+
+FPlayerData const* UTeamStateSubsystem::GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const
+{
+	FTeamData const& TeamData = TeamMap[Team];
+	return TeamData.PlayerByPosition(PlayerPosition);
+}
