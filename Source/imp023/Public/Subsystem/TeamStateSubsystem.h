@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "Component/CompTeam.h"
 #include "Data/PlayerData.h"
-#include "Data/TeamData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TeamStateSubsystem.generated.h"
 
+class UTeamData;
 /**
  *
  */
@@ -22,8 +22,8 @@ public:
 
 	UTexture2D* GetLogo(UObject* const Outer, ETeam const Team) const;
 	FLinearColor GetColor(ETeam Team) const;
-	FPlayerData const* GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const;
+	UPlayerData const* GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const;
 
 private:
-	TMap<ETeam,FTeamData> TeamMap;
+	TMap<ETeam,UTeamData*> TeamMap;
 };

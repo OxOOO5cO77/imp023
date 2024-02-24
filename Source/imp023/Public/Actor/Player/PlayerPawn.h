@@ -6,7 +6,6 @@
 #include "Component/CompLocator.h"
 #include "Component/CompTeam.h"
 #include "Component/CompZone.h"
-#include "Data/PlayerData.h"
 #include "GameFramework/Pawn.h"
 #include "Subsystem/TeamStateSubsystem.h"
 #include "PlayerPawn.generated.h"
@@ -40,7 +39,7 @@ private:
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, FHitResult const& Hit);
 
 private:
-	static UPhysicalMaterial* CreateMaterialFromPlayer(FPlayerData const* PlayerData);
+	static UPhysicalMaterial* CreateMaterialFromPlayer(UPlayerData const* const PlayerData);
 
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -56,6 +55,8 @@ private:
 	UPROPERTY()
 	ABall* Ball;
 
-	FPlayerData const* PlayerData;
+	UPROPERTY()
+	UPlayerData const* PlayerData;
+
 	float BoostLimiter;
 };

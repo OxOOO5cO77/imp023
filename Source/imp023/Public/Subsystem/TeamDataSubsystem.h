@@ -3,11 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Data/PlayerData.h"
-#include "Data/TeamData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TeamDataSubsystem.generated.h"
 
+class UTeamData;
 /**
  *
  */
@@ -21,11 +20,10 @@ public:
 	virtual void Deinitialize() override;
 
 public:
-	TArray<FTeamData> ChooseThree() const;
+	TArray<UTeamData*> ChooseThree() const;
 
 private:
-	FPlayerData* P(uint32_t const ID);
+	void OnLoadTeamData(FPrimaryAssetId Id);
 private:
-	TArray<FTeamData> TeamData;
-	TArray<FPlayerData> PlayerData;
+	TArray<UTeamData*> TeamData;
 };

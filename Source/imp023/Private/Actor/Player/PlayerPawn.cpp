@@ -4,7 +4,6 @@
 
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
-#include "Data/PlayerData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Subsystem/TeamStateSubsystem.h"
@@ -118,7 +117,7 @@ void APlayerPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	}
 }
 
-UPhysicalMaterial* APlayerPawn::CreateMaterialFromPlayer(FPlayerData const* PlayerData)
+UPhysicalMaterial* APlayerPawn::CreateMaterialFromPlayer(UPlayerData const* const PlayerData)
 {
 	UPhysicalMaterial* PhysicalMaterial = NewObject<UPhysicalMaterial>();
 

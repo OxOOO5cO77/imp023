@@ -3,6 +3,7 @@
 
 #include "Subsystem/TeamStateSubsystem.h"
 
+#include "Data/TeamData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Subsystem/TeamDataSubsystem.h"
 
@@ -12,7 +13,8 @@ void UTeamStateSubsystem::InitializeTeams()
 	UTeamDataSubsystem* const TeamDataSubsystem = GameInstance->GetSubsystem<UTeamDataSubsystem>();
 	check(TeamDataSubsystem);
 
-	TArray<FTeamData> TeamData = TeamDataSubsystem->ChooseThree();
+	TArray<UTeamData*> TeamData = TeamDataSubsystem->ChooseThree();
+
 	TeamMap.Emplace(ETeam::Home, TeamData[0]);
 	TeamMap.Emplace(ETeam::Away1, TeamData[1]);
 	TeamMap.Emplace(ETeam::Away2, TeamData[2]);
@@ -20,20 +22,19 @@ void UTeamStateSubsystem::InitializeTeams()
 
 UTexture2D* UTeamStateSubsystem::GetLogo(UObject* const Outer, ETeam const Team) const
 {
-	FTeamData const& TeamData = TeamMap[Team];
-	FString const FullPath = "/Game/Team/" + TeamData.AssetPath + "/Logo";;
-	UTexture2D* Asset = LoadObject<UTexture2D>(Outer, *FullPath);
-	return Asset;
+	UTeamData const* TeamData = TeamMap[Team];
+	check(TeamData);
+	return TeamData->Logo.LoadSynchronous();
 }
 
 FLinearColor UTeamStateSubsystem::GetColor(ETeam const Team) const
 {
-	FTeamData const& TeamData = TeamMap[Team];
-	return TeamData.Color;
+	UTeamData const* TeamData = TeamMap[Team];
+	return TeamData->Color;
 }
 
-FPlayerData const* UTeamStateSubsystem::GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const
+UPlayerData const* UTeamStateSubsystem::GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const
 {
-	FTeamData const& TeamData = TeamMap[Team];
-	return TeamData.PlayerByPosition(PlayerPosition);
+	UTeamData const* TeamData = TeamMap[Team];
+	return TeamData->PlayerByPosition(PlayerPosition);
 }
