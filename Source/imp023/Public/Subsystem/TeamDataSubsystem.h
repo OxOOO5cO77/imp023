@@ -23,7 +23,7 @@ public:
 	TArray<UTeamData*> ChooseThree() const;
 
 private:
-	void OnLoadTeamData(FPrimaryAssetId Id);
+	void OnLoadTeamData(TArray<FPrimaryAssetId> IdList);
 private:
 	TArray<UTeamData*> TeamData;
 };

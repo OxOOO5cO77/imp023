@@ -17,17 +17,17 @@ void UTeamDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 	AssetManager.GetPrimaryAssetIdList("TeamData", IdList);
 	TArray<FName> const BundleList;
 
-	for (FPrimaryAssetId& Id : IdList)
-	{
-		AssetManager.LoadPrimaryAsset(Id, BundleList, FStreamableDelegate::CreateUObject(this, &UTeamDataSubsystem::OnLoadTeamData, Id));;
-	}
+	AssetManager.LoadPrimaryAssets(IdList, BundleList, FStreamableDelegate::CreateUObject(this, &UTeamDataSubsystem::OnLoadTeamData, IdList));
 }
 
-void UTeamDataSubsystem::OnLoadTeamData(FPrimaryAssetId Id)
+void UTeamDataSubsystem::OnLoadTeamData(TArray<FPrimaryAssetId> IdList)
 {
-	UAssetManager const& AssetManager = UAssetManager::Get();
-	UTeamData* TeamDataObject = AssetManager.GetPrimaryAssetObject<UTeamData>(Id);
-	TeamData.Add(TeamDataObject);
+	for (FPrimaryAssetId Id : IdList)
+	{
+		UAssetManager const& AssetManager = UAssetManager::Get();
+		UTeamData* TeamDataObject = AssetManager.GetPrimaryAssetObject<UTeamData>(Id);
+		TeamData.Add(TeamDataObject);
+	}
 }
 
 void UTeamDataSubsystem::Deinitialize()
