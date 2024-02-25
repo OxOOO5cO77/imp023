@@ -22,6 +22,7 @@ public:
 
 	UTexture2D* GetLogo(UObject* const Outer, ETeam const Team) const;
 	FLinearColor GetColor(ETeam Team) const;
+	FString GetAbbrev(ETeam Team) const;
 	UPlayerData const* GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const;
 
 private:

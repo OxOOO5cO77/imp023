@@ -29,34 +29,43 @@ void AGameStateGameplay::ChangeZone(EZone const Zone)
 	ChangeZoneEvent.Broadcast(PreviousZone, CurrentZone);
 }
 
-void AGameStateGameplay::SetCurrentTeamTouched(ETeam const Team)
+void AGameStateGameplay::SetCurrentTouched(UPlayerData const* const Player, ETeam const Team)
 {
 	if (Team == CurrentTeamTouched)
 	{
+		CurrentPlayerTouched = Player;
 		return;
 	}
 
+	PreviousPlayerTouched = CurrentPlayerTouched;
 	PreviousTeamTouched = CurrentTeamTouched;
 	CurrentTeamTouched = Team;
+	CurrentPlayerTouched = Player;
 }
 
 void AGameStateGameplay::ScoreGoal(ETeam const Team)
 {
 	ETeam const GoalTeam = FGameplayUtils::MapPeriodTeamToTeam(Period, Team);
-	ETeam const ScoringTeam = CurrentTeamTouched != GoalTeam ? CurrentTeamTouched : PreviousTeamTouched;
+	ETeam const ScoringTeam = CurrentTeamTouched == GoalTeam ? PreviousTeamTouched : CurrentTeamTouched;
 
-	if (ScoringTeam != ETeam::None)
-	{
-		Score[static_cast<int>(ScoringTeam)]++;
-	}
-	else
+	if (ScoringTeam == ETeam::None)
 	{
 		Score[static_cast<int>(ETeam::Home)] += CurrentTeamTouched == ETeam::Home ? 0 : 1;
 		Score[static_cast<int>(ETeam::Away1)] += CurrentTeamTouched == ETeam::Away1 ? 0 : 1;
 		Score[static_cast<int>(ETeam::Away2)] += CurrentTeamTouched == ETeam::Away2 ? 0 : 1;
 	}
+	else
+	{
+		Score[static_cast<int>(ScoringTeam)]++;
+	}
 
 	BroadcastScores();
+
+	LastGoal.GoalPlayer = CurrentTeamTouched == GoalTeam ? PreviousPlayerTouched : CurrentPlayerTouched;
+	LastGoal.OwnGoalPlayer = CurrentTeamTouched == GoalTeam ? CurrentPlayerTouched : nullptr;;
+	LastGoal.GoalTeam = ScoringTeam;
+	LastGoal.OwnGoalTeam = CurrentTeamTouched;
+	LastGoal.TimeOfGoal = GetWorld()->GetTimerManager().GetTimerRemaining(TimerPeriod);
 
 	SetState(EGameplayGameState::PostPlay);
 }
@@ -73,6 +82,8 @@ void AGameStateGameplay::ResetGameplay()
 
 	PreviousTeamTouched = ETeam::None;
 	CurrentTeamTouched = ETeam::None;
+	PreviousPlayerTouched = nullptr;
+	CurrentPlayerTouched = nullptr;
 
 	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
 	GameMode->ResetActorsForAllZones();

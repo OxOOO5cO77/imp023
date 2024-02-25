@@ -9,6 +9,8 @@
 #include "UI/Manager/ScreenManager.h"
 #include "GameStateGameplay.generated.h"
 
+class UTeamData;
+class UPlayerData;
 class APlayerControllerGameplay;
 
 UENUM(BlueprintType)
@@ -28,6 +30,16 @@ enum class EGameplayGameState : uint8
 DECLARE_MULTICAST_DELEGATE_OneParam(FStateChangeEvent, EGameplayGameState);
 DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateScoresEvent, TArray<int> const&);
 DECLARE_MULTICAST_DELEGATE_TwoParams(FChangeZoneEvent, EZone, EZone);
+
+struct FLastGoal
+{
+public:
+	UPlayerData const* GoalPlayer;
+	ETeam GoalTeam;
+	UPlayerData const* OwnGoalPlayer;
+	ETeam OwnGoalTeam;
+	int TimeOfGoal;
+};
 
 /**
  *
@@ -62,7 +74,7 @@ public:
 	TArray<int32> Score;
 
 public:
-	void SetCurrentTeamTouched(ETeam const Team);
+	void SetCurrentTouched(UPlayerData const* const Player, ETeam const Team);
 	void ChangeZone(EZone const Zone);
 	void ScoreGoal(ETeam const Team);
 	void ResetGameplay();
@@ -72,6 +84,8 @@ public:
 	void ProcessInputMain(APlayerControllerGameplay* PlayerControllerGameplay) const;
 	float GetTimerDelayRemaining() const;
 	float GetPeriodTimeRemainingPercent() const;
+
+	FLastGoal const& GetLastGoal() const { return LastGoal; }
 
 private:
 	FTimerHandle TimerPeriod;
@@ -83,6 +97,11 @@ private:
 	EZone PreviousZone;
 	ETeam CurrentTeamTouched;
 	ETeam PreviousTeamTouched;
+	UPROPERTY()
+	UPlayerData const* CurrentPlayerTouched;
+	UPROPERTY()
+	UPlayerData const* PreviousPlayerTouched;
+	FLastGoal LastGoal;
 
 private:
 	void SetState_PreMatch();

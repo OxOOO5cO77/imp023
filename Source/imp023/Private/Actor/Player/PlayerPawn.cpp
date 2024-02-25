@@ -113,7 +113,7 @@ void APlayerPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	if (OtherActor == Ball)
 	{
 		AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-		GameState->SetCurrentTeamTouched(CompTeam->Get());
+		GameState->SetCurrentTouched(PlayerData, CompTeam->Get());
 	}
 }
 

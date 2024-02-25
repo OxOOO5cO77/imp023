@@ -30,7 +30,15 @@ UTexture2D* UTeamStateSubsystem::GetLogo(UObject* const Outer, ETeam const Team)
 FLinearColor UTeamStateSubsystem::GetColor(ETeam const Team) const
 {
 	UTeamData const* TeamData = TeamMap[Team];
+	check(TeamData);
 	return TeamData->Color;
+}
+
+FString UTeamStateSubsystem::GetAbbrev(ETeam Team) const
+{
+	UTeamData const* TeamData = TeamMap[Team];
+	check(TeamData);
+	return TeamData->Abbrev;
 }
 
 UPlayerData const* UTeamStateSubsystem::GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const
