@@ -23,10 +23,13 @@ enum class EPlayerPosition
 /**
  *
  */
-UCLASS()
+UCLASS(BlueprintType)
 class IMP023_API UPlayerData : public UDataAsset
 {
 	GENERATED_BODY()
+public:
+	virtual void GetAssetRegistryTags(TArray<FAssetRegistryTag>& OutTags) const override;
+
 public:
 	UPROPERTY(EditAnywhere)
 	uint32 ID;
@@ -34,17 +37,17 @@ public:
 	FString Name;
 	UPROPERTY(EditAnywhere)
 	TSoftObjectPtr<UTexture2D> Image;
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, AssetRegistrySearchable)
 	EPlayerPosition Position;
-	UPROPERTY(EditAnywhere, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AssetRegistrySearchable, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
 	float Rate;
-	UPROPERTY(EditAnywhere, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AssetRegistrySearchable, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
 	float Power;
-	UPROPERTY(EditAnywhere, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AssetRegistrySearchable, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
 	float Slide;
-	UPROPERTY(EditAnywhere, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AssetRegistrySearchable, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
 	float Boing;
-	UPROPERTY(EditAnywhere, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, AssetRegistrySearchable, meta=(ClampMin=0.0f,ClampMax=1.0f,UIMin=0.0,UIMax=1.0f))
 	float Mass;
 
 public:
@@ -56,6 +59,7 @@ public:
 	float PowerAsBoost() const;
 	float SlideAsFriction() const;
 	float BoingAsRestitution() const;
+	FString PositionAsString() const;
 
 public:
 	static int Attr(float const InValue);
