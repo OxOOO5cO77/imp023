@@ -4,6 +4,7 @@
 
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
+#include "Component/CompTeamColor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Subsystem/TeamStateSubsystem.h"
@@ -23,6 +24,7 @@ APlayerPawn::APlayerPawn()
 	CompTeam = CreateDefaultSubobject<UCompTeam>(TEXT("Team"));
 	CompLocator = CreateDefaultSubobject<UCompLocator>(TEXT("Locator"));
 	CompZone = CreateDefaultSubobject<UCompZone>(TEXT("Zone"));
+	CompTeamColor = CreateDefaultSubobject<UCompTeamColor>(TEXT("Team Color"));
 }
 
 // Called when the game starts or when spawned
@@ -88,12 +90,6 @@ void APlayerPawn::InitComponents(EZone const Zone, ELocator const Locator, ETeam
 	CompTeam->Set(Team);
 
 	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
-	FLinearColor const Color = TeamStateSubsystem->GetColor(Team);
-
-	UMaterialInstanceDynamic* Material = CompStaticMeshBase->CreateDynamicMaterialInstance(0);
-	Material->SetVectorParameterValue("TeamColor", Color);
-	CompStaticMeshBase->SetMaterial(0, Material);
-
 	EPlayerPosition const PlayerPosition = FGameplayUtils::MapZoneTeamToPlayerPosition(Zone, Team);
 	PlayerData = TeamStateSubsystem->GetTeamPlayer(Team, PlayerPosition);
 

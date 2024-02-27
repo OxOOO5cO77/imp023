@@ -15,6 +15,8 @@ enum class ETeam : uint8
 	Away2,
 };
 
+DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateTeamEvent, ETeam);
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class IMP023_API UCompTeam : public UActorComponent
 {
@@ -25,8 +27,11 @@ public:
 	UCompTeam();
 
 public:
+	FUpdateTeamEvent UpdateTeamEvent;
+
+public:
 	ETeam Get() const { return Team; }
-	void Set(ETeam const Value) { Team = Value; }
+	void Set(ETeam const Value);
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))

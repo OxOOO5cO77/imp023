@@ -8,3 +8,9 @@ UCompTeam::UCompTeam()
 
 	Team = ETeam::None;
 }
+
+void UCompTeam::Set(ETeam const Value)
+{
+	Team = Value;
+	UpdateTeamEvent.Broadcast(Value);
+}

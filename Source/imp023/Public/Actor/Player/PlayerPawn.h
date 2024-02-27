@@ -10,6 +10,7 @@
 #include "Subsystem/TeamStateSubsystem.h"
 #include "PlayerPawn.generated.h"
 
+class UCompTeamColor;
 class ABall;
 
 UCLASS()
@@ -47,6 +48,8 @@ private:
 
 	UPROPERTY(EditAnywhere, Category="Team", meta = (AllowPrivateAccess = "true"))
 	UCompTeam* CompTeam;
+	UPROPERTY(EditAnywhere, Category="Team", meta = (AllowPrivateAccess = "true"))
+	UCompTeamColor* CompTeamColor;
 	UPROPERTY(EditAnywhere, Category="Team", meta = (AllowPrivateAccess = "true"))
 	UCompLocator* CompLocator;
 	UPROPERTY(EditAnywhere, Category="Team", meta = (AllowPrivateAccess = "true"))
