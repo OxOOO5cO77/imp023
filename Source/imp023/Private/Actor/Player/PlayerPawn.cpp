@@ -59,13 +59,15 @@ void APlayerPawn::Boost()
 
 void APlayerPawn::Move(FVector const& Dir) const
 {
-	if (BoostLimiter <= 0.0f)
-	{
-		CompStaticMeshBase->AddImpulse(Dir * PlayerData->PowerAsImpulse(), NAME_None, true);
-		FVector const OldVelocity = CompStaticMeshBase->GetPhysicsLinearVelocity();
-		FVector const NewVelocity = OldVelocity.GetClampedToMaxSize(PlayerData->RateAsMaxVelocity());
-		CompStaticMeshBase->SetPhysicsLinearVelocity(NewVelocity);
-	}
+	FVector const OldVelocity = CompStaticMeshBase->GetPhysicsLinearVelocity();
+	float const CurRate = OldVelocity.Length();
+	float const MaxRate = PlayerData->RateAsMaxVelocity();
+	float const Impulse = PlayerData->PowerAsImpulse();
+
+	CompStaticMeshBase->AddImpulse(Dir * Impulse, NAME_None, true);
+	FVector const NewVelocity = CompStaticMeshBase->GetPhysicsLinearVelocity();
+	FVector const ClampedVelocity = NewVelocity.GetClampedToMaxSize( CurRate > MaxRate ? CurRate : MaxRate);;
+	CompStaticMeshBase->SetPhysicsLinearVelocity(ClampedVelocity);
 }
 
 void APlayerPawn::ResetTo(FVector const& Location)
