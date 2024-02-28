@@ -44,6 +44,12 @@ void AGameStateGameplay::SetCurrentTouched(UPlayerData const* const Player, ETea
 
 void AGameStateGameplay::ScoreGoal(ETeam const Team)
 {
+	if (CurrentGameState != EGameplayGameState::Play)
+	{
+		// prevent goals after timer expires
+		return;
+	}
+
 	ETeam const GoalTeam = FGameplayUtils::MapPeriodTeamToTeam(Period, Team);
 	ETeam const ScoringTeam = CurrentTeamTouched == GoalTeam ? PreviousTeamTouched : CurrentTeamTouched;
 
