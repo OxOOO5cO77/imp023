@@ -20,7 +20,7 @@ void APlayerControllerGameplay::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	OnStateChangeHandle = GameState->StateChangeEvent.AddUObject(this, &APlayerControllerGameplay::OnStateChange);
 
 	if (ULocalPlayer const* LocalPlayer = Cast<ULocalPlayer>(Player))
@@ -44,7 +44,7 @@ void APlayerControllerGameplay::EndPlay(EEndPlayReason::Type const EndPlayReason
 {
 	Super::EndPlay(EndPlayReason);
 
-	AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	GameState->StateChangeEvent.Remove(OnStateChangeHandle);
 }
 
@@ -60,24 +60,23 @@ void APlayerControllerGameplay::SetupInputComponent()
 
 void APlayerControllerGameplay::ActionMove(FInputActionValue const& InputActionValue)
 {
-	if(!bCanMove)
+	if (!bCanMove)
 	{
 		return;
 	}
-	APlayerPawn const* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
+	APlayerPawn const* const PlayerPawn = CastChecked<APlayerPawn>(GetPawn());
 	PlayerPawn->Move(InputActionValue.Get<FVector>());
 }
 
 void APlayerControllerGameplay::ActionBoost(FInputActionValue const& InputActionValue)
 {
-	if(!bCanMove)
+	if (!bCanMove)
 	{
-		AGameStateGameplay const* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
-
+		AGameStateGameplay const* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 		GameState->ProcessInputMain(this);
 		return;
 	}
-	APlayerPawn* const PlayerPawn = Cast<APlayerPawn>(GetPawn());
+	APlayerPawn* const PlayerPawn = CastChecked<APlayerPawn>(GetPawn());
 	PlayerPawn->Boost();
 }
 

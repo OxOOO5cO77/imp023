@@ -2,7 +2,6 @@
 #include "Actor/Menu/PlayerControllerMenu.h"
 
 #include "Actor/Menu/GameStateMenu.h"
-#include "Kismet/GameplayStatics.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
@@ -11,7 +10,7 @@ void APlayerControllerMenu::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameState = CastChecked<AGameStateMenu>(UGameplayStatics::GetGameState(this));
+	GameState = GetWorld()->GetGameState<AGameStateMenu>();
 
 	if (ULocalPlayer const* LocalPlayer = Cast<ULocalPlayer>(Player))
 	{

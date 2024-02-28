@@ -4,12 +4,11 @@
 #include "Subsystem/TeamStateSubsystem.h"
 
 #include "Data/TeamData.h"
-#include "Kismet/GameplayStatics.h"
 #include "Subsystem/TeamDataSubsystem.h"
 
 void UTeamStateSubsystem::InitializeTeams()
 {
-	UGameInstance* const GameInstance = UGameplayStatics::GetGameInstance(this);
+	UGameInstance* const GameInstance = GetWorld()->GetGameInstance();
 	UTeamDataSubsystem* const TeamDataSubsystem = GameInstance->GetSubsystem<UTeamDataSubsystem>();
 	check(TeamDataSubsystem);
 

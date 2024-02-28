@@ -7,7 +7,6 @@
 #include "Component/CompZone.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "Engine/SceneCapture2D.h"
-#include "Kismet/GameplayStatics.h"
 
 
 // Sets default values
@@ -22,7 +21,7 @@ void AMinimapManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 
 	OnChangeZoneHandle = GameState->ChangeZoneEvent.AddUObject(this, &AMinimapManager::OnChangeZone);
 }
@@ -31,7 +30,7 @@ void AMinimapManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 
 	GameState->ChangeZoneEvent.Remove(OnChangeZoneHandle);
 }

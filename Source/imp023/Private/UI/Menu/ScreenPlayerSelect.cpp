@@ -6,7 +6,6 @@
 #include "Component/CompTeam.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Kismet/GameplayStatics.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
 static constexpr int GMaxSlot = 2;
@@ -21,7 +20,7 @@ void UScreenPlayerSelect::NativeOnInitialized()
 
 	TrackedSlotIndex = 0;
 
-	UTeamStateSubsystem* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 	TeamStateSubsystem->InitializeTeams();
 
@@ -51,7 +50,7 @@ void UScreenPlayerSelect::SetupTeam(ETeam const Team)
 			break;
 	}
 
-	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 
 	UTexture2D* Asset = TeamStateSubsystem->GetLogo(this, Team);
@@ -68,7 +67,7 @@ void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 		return;
 	}
 
-	AGameStateMenu* const GameState = CastChecked<AGameStateMenu>(UGameplayStatics::GetGameState(this));
+	AGameStateMenu* const GameState = GetWorld()->GetGameState<AGameStateMenu>();
 
 	bool const Success = GameState->SetPlayerToTeam(PlayerIndex, SlotToTeam[TrackedSlotIndex]);
 
@@ -119,7 +118,7 @@ void UScreenPlayerSelect::OnInputBack(int const PlayerIndex)
 
 	--TrackedSlotIndex;
 
-	AGameStateMenu* const GameState = Cast<AGameStateMenu>(UGameplayStatics::GetGameState(this));
+	AGameStateMenu* const GameState = GetWorld()->GetGameState<AGameStateMenu>();
 	check(GameState);
 
 	GameState->DisassociateTeam(SlotToTeam[TrackedSlotIndex]);

@@ -6,18 +6,17 @@
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Kismet/GameplayStatics.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
 void UScreenPrePeriod::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	AGameStateGameplay const* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
+	AGameStateGameplay const* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 
 	TextPeriod->SetText(FText::Format(INVTEXT("Period {0}"), GameState->Period));
 
-	UTeamStateSubsystem* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 
 	ImageHome->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Home));
@@ -29,7 +28,6 @@ void UScreenPrePeriod::OnInputMain(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
-	AGameStateGameplay* GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
-
+	AGameStateGameplay* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	GameState->SetState(EGameplayGameState::PrePlay);
 }

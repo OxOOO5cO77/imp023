@@ -3,7 +3,6 @@
 #include "Actor/Object/Ball.h"
 
 #include "Actor/Gameplay/GameStateGameplay.h"
-#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ABall::ABall()
@@ -19,7 +18,7 @@ void ABall::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	OnStateChangeHandle = GameState->StateChangeEvent.AddUObject(this, &ABall::OnStateChange);
 }
 
@@ -27,7 +26,7 @@ void ABall::EndPlay(EEndPlayReason::Type const EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	AGameStateGameplay* GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	AGameStateGameplay* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	GameState->StateChangeEvent.Remove(OnStateChangeHandle);;
 }
 

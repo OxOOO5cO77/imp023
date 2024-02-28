@@ -5,7 +5,6 @@
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
 #include "Component/CompTeam.h"
-#include "Kismet/GameplayStatics.h"
 
 AVolumeGoal::AVolumeGoal()
 {
@@ -18,7 +17,7 @@ void AVolumeGoal::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 }
 
 void AVolumeGoal::OnOverlap(AActor* OverlappedActor, AActor* OtherActor)

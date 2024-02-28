@@ -6,15 +6,13 @@
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
-#include "Kismet/GameplayStatics.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
 void UScreenGameplayHud::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(GetWorld()));
-	check(GameState);
+	GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 
 	OnUpdateScoresHandle = GameState->UpdateScoresEvent.AddUObject(this, &UScreenGameplayHud::OnUpdateScores);
 	GameState->BroadcastScores();
@@ -23,7 +21,7 @@ void UScreenGameplayHud::NativeOnInitialized()
 	BarPeriod2->SetPercent(GameState->Period <= 2 ? 1.0f : 0.0f);
 	BarPeriod3->SetPercent(GameState->Period <= 3 ? 1.0f : 0.0f);
 
-	UTeamStateSubsystem* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 
 	BarPeriod1->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Home));

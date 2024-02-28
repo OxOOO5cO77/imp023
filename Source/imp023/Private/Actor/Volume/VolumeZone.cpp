@@ -5,7 +5,6 @@
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
 #include "Component/CompZone.h"
-#include "Kismet/GameplayStatics.h"
 
 AVolumeZone::AVolumeZone()
 {
@@ -18,7 +17,7 @@ void AVolumeZone::BeginPlay()
 {
 	Super::BeginPlay();
 
-	GameState = CastChecked<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+	GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 }
 
 
