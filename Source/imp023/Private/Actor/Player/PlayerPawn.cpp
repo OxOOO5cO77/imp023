@@ -52,8 +52,9 @@ void APlayerPawn::Boost()
 {
 	if (BoostLimiter <= 0.0f)
 	{
-		FVector const VecToBall = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), Ball->GetActorLocation());
-		FVector const VecToTarget = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), Ball->GetLocationTargetForBoost(this->GetActorLocation()));
+		FVector const PlayerLocation = GetActorLocation();
+		FVector const VecToBall = UKismetMathLibrary::GetDirectionUnitVector(PlayerLocation, Ball->GetActorLocation());
+		FVector const VecToTarget = UKismetMathLibrary::GetDirectionUnitVector(PlayerLocation, Ball->GetLocationTargetForBoost(PlayerLocation, PlayerData->PowerAsBoost()));
 
 		float const DotProduct = UKismetMathLibrary::Dot_VectorVector(VecToBall, VecToTarget);
 		FVector const& Target = DotProduct > 0 ? VecToTarget : VecToBall;
@@ -72,7 +73,7 @@ void APlayerPawn::Move(FVector const& Dir) const
 
 	CompStaticMeshBase->AddImpulse(Dir * Impulse, NAME_None, true);
 	FVector const NewVelocity = CompStaticMeshBase->GetPhysicsLinearVelocity();
-	FVector const ClampedVelocity = NewVelocity.GetClampedToMaxSize( CurRate > MaxRate ? CurRate : MaxRate);;
+	FVector const ClampedVelocity = NewVelocity.GetClampedToMaxSize(CurRate > MaxRate ? CurRate : MaxRate);;
 	CompStaticMeshBase->SetPhysicsLinearVelocity(ClampedVelocity);
 }
 

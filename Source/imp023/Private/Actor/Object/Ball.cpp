@@ -30,11 +30,12 @@ void ABall::EndPlay(EEndPlayReason::Type const EndPlayReason)
 	GameState->StateChangeEvent.Remove(OnStateChangeHandle);;
 }
 
-FVector ABall::GetLocationTargetForBoost(FVector const& Source) const
+FVector ABall::GetLocationTargetForBoost(FVector const& Source, float const Rate) const
 {
-	FVector const Distance = Source - GetActorLocation();
-	double const Time = Distance.Length() / 1000.0f;
-	return GetActorLocation() + CompStaticMeshBase->GetComponentVelocity() * Time;
+	FVector const BallLocation = GetActorLocation();
+	float const Distance = (Source - BallLocation).Length();
+	float const Time = Distance / Rate;
+	return BallLocation + CompStaticMeshBase->GetComponentVelocity() * Time;
 }
 
 void ABall::Boost(FVector const& Boost) const

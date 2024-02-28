@@ -24,7 +24,7 @@ protected:
 
 public:
 	void Boost(FVector const& Boost) const;
-	FVector GetLocationTargetForBoost(FVector const& Source) const;
+	FVector GetLocationTargetForBoost(FVector const& Source, float const Rate) const;
 
 private:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
