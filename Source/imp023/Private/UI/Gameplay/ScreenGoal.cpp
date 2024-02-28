@@ -17,7 +17,7 @@ void UScreenGoal::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	AGameStateGameplay const* GameState = CastChecked<AGameStateGameplay>(GetWorld()->GetGameState());
+	AGameStateGameplay const* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 
@@ -41,4 +41,12 @@ void UScreenGoal::NativeOnInitialized()
 
 	UPlayerData const* PlayerToUse = GoalPlayer != nullptr ? GoalPlayer : OwnGoalPlayer;
 	ImageGoalPlayer->SetBrushFromTexture(PlayerToUse->Image.LoadSynchronous());
+}
+
+void UScreenGoal::OnInputMain(int const PlayerIndex)
+{
+	Super::OnInputMain(PlayerIndex);
+
+	AGameStateGameplay* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
+	GameState->SetState(EGameplayGameState::PrePlay);
 }

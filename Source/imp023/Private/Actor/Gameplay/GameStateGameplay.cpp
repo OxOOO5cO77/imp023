@@ -4,7 +4,6 @@
 
 #include "Actor/Gameplay/GameModeGameplay.h"
 #include "Actor/Gameplay/PlayerStateGameplay.h"
-#include "Kismet/GameplayStatics.h"
 #include "Subsystem/TeamStateSubsystem.h"
 #include "Utils/GameplayUtils.h"
 
@@ -85,7 +84,7 @@ void AGameStateGameplay::ResetGameplay()
 	PreviousPlayerTouched = nullptr;
 	CurrentPlayerTouched = nullptr;
 
-	AGameModeGameplay const* const GameMode = Cast<AGameModeGameplay>(UGameplayStatics::GetGameMode(this));
+	AGameModeGameplay const* const GameMode = GetWorld()->GetAuthGameMode<AGameModeGameplay>();
 	GameMode->ResetActorsForAllZones();
 }
 
@@ -127,8 +126,6 @@ void AGameStateGameplay::SetState_PostPlay()
 	GetWorld()->GetTimerManager().PauseTimer(TimerPeriod);
 
 	ScreenManager->NavigateTo("Goal");
-
-	DelayedStateChange(EGameplayGameState::PrePlay, 3.0f);
 }
 
 void AGameStateGameplay::SetState_PostPeriod()
@@ -212,7 +209,7 @@ EZone AGameStateGameplay::GetCurrentZone() const
 
 FLinearColor AGameStateGameplay::GetTeamColorForPeriod(ETeam const Team) const
 {
-	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 	return TeamStateSubsystem->GetColor(FGameplayUtils::MapPeriodTeamToTeam(Period, Team));
 }

@@ -21,6 +21,9 @@ class IMP023_API UScreenGoal : public UScreen
 public:
 	virtual void NativeOnInitialized() override;
 
+protected:
+	virtual void OnInputMain(int PlayerIndex) override;
+
 private:
 	UPROPERTY()
 	UTextBlock* TextGoalTitle;
