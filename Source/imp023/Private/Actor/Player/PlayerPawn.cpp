@@ -52,9 +52,13 @@ void APlayerPawn::Boost()
 {
 	if (BoostLimiter <= 0.0f)
 	{
-		FVector const Dir = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), Ball->GetLocationTargetForBoost(this->GetActorLocation()));
+		FVector const VecToBall = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), Ball->GetActorLocation());
+		FVector const VecToTarget = UKismetMathLibrary::GetDirectionUnitVector(GetActorLocation(), Ball->GetLocationTargetForBoost(this->GetActorLocation()));
 
-		CompStaticMeshBase->SetPhysicsLinearVelocity(Dir * PlayerData->PowerAsBoost());
+		float const DotProduct = UKismetMathLibrary::Dot_VectorVector(VecToBall, VecToTarget);
+		FVector const& Target = DotProduct > 0 ? VecToTarget : VecToBall;
+
+		CompStaticMeshBase->SetPhysicsLinearVelocity(Target * PlayerData->PowerAsBoost());
 		BoostLimiter = GBoostLimiter;
 	}
 }
@@ -89,7 +93,7 @@ void APlayerPawn::InitComponents(EZone const Zone, ELocator const Locator, ETeam
 	CompLocator->Set(Locator);
 	CompTeam->Set(Team);
 
-	UTeamStateSubsystem const* const TeamStateSubsystem = UGameplayStatics::GetGameInstance(this)->GetSubsystem<UTeamStateSubsystem>();
+	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	EPlayerPosition const PlayerPosition = FGameplayUtils::MapZoneTeamToPlayerPosition(Zone, Team);
 	PlayerData = TeamStateSubsystem->GetTeamPlayer(Team, PlayerPosition);
 
@@ -110,7 +114,7 @@ void APlayerPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 	if (OtherActor == Ball)
 	{
-		AGameStateGameplay* const GameState = Cast<AGameStateGameplay>(UGameplayStatics::GetGameState(this));
+		AGameStateGameplay* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 		GameState->SetCurrentTouched(PlayerData, CompTeam->Get());
 	}
 }
