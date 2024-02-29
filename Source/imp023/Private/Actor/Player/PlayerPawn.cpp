@@ -46,7 +46,7 @@ void APlayerPawn::Tick(float const DeltaSeconds)
 	}
 }
 
-float GBoostLimiter = 0.5f;
+float constexpr GBoostLimiter = 1.0f;
 
 void APlayerPawn::Boost()
 {
