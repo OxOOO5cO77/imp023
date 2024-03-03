@@ -22,10 +22,10 @@ void UTeamDataSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 
 void UTeamDataSubsystem::OnLoadTeamData(TArray<FPrimaryAssetId> IdList)
 {
+	UAssetManager const& AssetManager = UAssetManager::Get();
 	for (FPrimaryAssetId Id : IdList)
 	{
-		UAssetManager const& AssetManager = UAssetManager::Get();
-		UTeamData* TeamDataObject = AssetManager.GetPrimaryAssetObject<UTeamData>(Id);
+		UTeamData const* const TeamDataObject = AssetManager.GetPrimaryAssetObject<UTeamData>(Id);
 		TeamData.Add(TeamDataObject);
 	}
 }
@@ -35,15 +35,25 @@ void UTeamDataSubsystem::Deinitialize()
 	Super::Deinitialize();
 }
 
-TArray<UTeamData*> UTeamDataSubsystem::ChooseThree() const
+TArray<UTeamData const*> UTeamDataSubsystem::Choose(size_t const Amount, EChooseMode const Mode) const
 {
-	check(TeamData.Num() >= 3);
+	check(TeamData.Num() >= Amount);
+	TArray<UTeamData const*> Result = TeamData;
 
-	TArray<UTeamData*> Result = TeamData;
+	switch (Mode)
+	{
+		case EChooseMode::Sorted:
+			Algo::SortBy(Result, &UTeamData::ID);
+			break;
+		case EChooseMode::Random:
+			Algo::RandomShuffle(Result);
+			break;
+	}
 
-	Algo::RandomShuffle(Result);
-
-	Result.RemoveAt(3, Result.Num() - 3);
+	if (Result.Num() > Amount)
+	{
+		Result.RemoveAt(Amount, Result.Num() - Amount);
+	}
 
 	return Result;
 }

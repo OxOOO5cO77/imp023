@@ -4,16 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enum/ETeam.h"
 #include "CompTeam.generated.h"
-
-UENUM(BlueprintType)
-enum class ETeam : uint8
-{
-	None,
-	Home,
-	Away1,
-	Away2,
-};
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FUpdateTeamEvent, ETeam);
 

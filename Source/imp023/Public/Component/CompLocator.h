@@ -4,17 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enum/ELocator.h"
 #include "CompLocator.generated.h"
-
-UENUM(BlueprintType)
-enum class ELocator : uint8
-{
-	None,
-	North,
-	East,
-	South,
-	West,
-};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class IMP023_API UCompLocator : public UActorComponent

@@ -3,59 +3,63 @@
 #include "UI/Menu/ScreenPlayerSelect.h"
 
 #include "Actor/Menu/GameStateMenu.h"
-#include "Component/CompTeam.h"
-#include "Components/Image.h"
-#include "Components/TextBlock.h"
+#include "Subsystem/LeagueSubsystem.h"
 #include "Subsystem/TeamStateSubsystem.h"
+#include "UI/Menu/PartTeam.h"
 
 static constexpr int GMaxSlot = 2;
-static constexpr ETeam SlotToTeam[] = {ETeam::Home, ETeam::Away1, ETeam::Away2};
 
 void UScreenPlayerSelect::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	TextAway1->SetVisibility(ESlateVisibility::Hidden);
-	TextAway2->SetVisibility(ESlateVisibility::Hidden);
+	ULeagueSubsystem const* const LeagueSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<ULeagueSubsystem>();
+	check(LeagueSubsystem);
 
-	TrackedSlotIndex = 0;
+	MatchTeams = LeagueSubsystem->NextMatchTeams();
+
+	for (int i = 0; i < 3; ++i)
+	{
+		Part(i)->SetLogo(MatchTeams[i].Team);
+		Part(i)->SetText(MatchTeams[i].Controller == ELeagueController::Human ? FString() : TEXT("CPU"));;
+	}
 
 	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
-	TeamStateSubsystem->InitializeTeams();
 
-	for (ETeam const Team : SlotToTeam)
+	TeamStateSubsystem->InitializeTeams(MatchTeams);
+
+	TrackedSlotIndex = 0;
+	NextTrackedIndex();
+
+	if (TrackedSlotIndex < 3)
 	{
-		SetupTeam(Team);
+		Part(TrackedSlotIndex)->SetText(TEXT("CHOOSE"));
 	}
 }
 
-void UScreenPlayerSelect::SetupTeam(ETeam const Team)
+UPartTeam* UScreenPlayerSelect::Part(uint const Slot) const
 {
-	UImage* Image = nullptr;
-
-	switch (Team)
-	{
-		case ETeam::None:
-			checkNoEntry();
-			break;
-		case ETeam::Home:
-			Image = ImageHome;
-			break;
-		case ETeam::Away1:
-			Image = ImageAway1;
-			break;
-		case ETeam::Away2:
-			Image = ImageAway2;
-			break;
-	}
-
-	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
-	check(TeamStateSubsystem);
-
-	UTexture2D* Asset = TeamStateSubsystem->GetLogo(this, Team);
-	Image->SetBrushFromTexture(Asset);
+	static UPartTeam* const Parts[3] = {TeamHome, TeamAway1, TeamAway2};
+	return Parts[Slot];
 }
+
+void UScreenPlayerSelect::NextTrackedIndex()
+{
+	while (TrackedSlotIndex <= GMaxSlot && MatchTeams[TrackedSlotIndex].Controller == ELeagueController::CPU)
+	{
+		++TrackedSlotIndex;
+	}
+}
+
+void UScreenPlayerSelect::PrevTrackedIndex()
+{
+	while (TrackedSlotIndex > 0 && MatchTeams[TrackedSlotIndex - 1].Controller == ELeagueController::CPU)
+	{
+		--TrackedSlotIndex;
+	}
+}
+
 
 void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 {
@@ -68,40 +72,24 @@ void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 	}
 
 	AGameStateMenu* const GameState = GetWorld()->GetGameState<AGameStateMenu>();
+	check(GameState);
 
-	bool const Success = GameState->SetPlayerToTeam(PlayerIndex, SlotToTeam[TrackedSlotIndex]);
+	bool const Success = GameState->SetPlayerToTeam(PlayerIndex, MatchTeams[TrackedSlotIndex].HomeAway);
 
 	if (Success)
 	{
-		Advance(PlayerIndex, true);
+		Part(TrackedSlotIndex)->SetText(FString::Printf(TEXT("PLAYER %d"), PlayerIndex));
+
+		++TrackedSlotIndex;
+		NextTrackedIndex();
+
+		if (TrackedSlotIndex <= GMaxSlot)
+		{
+			Part(TrackedSlotIndex)->SetText(TEXT("CHOOSE"));;
+		}
 	}
 }
 
-void UScreenPlayerSelect::OnInputAlt(int const PlayerIndex)
-{
-	Super::OnInputMain(PlayerIndex);
-
-	if (TrackedSlotIndex > GMaxSlot)
-	{
-		return;
-	}
-
-	Advance(PlayerIndex, false);
-}
-
-void UScreenPlayerSelect::Advance(int const PlayerIndex, bool const IsHuman)
-{
-	TWeakObjectPtr<UTextBlock> const CurText = TextFromSlot(TrackedSlotIndex);
-	CurText->SetText(IsHuman ? FText::Format(INVTEXT("PLAYER {0}"), PlayerIndex) : INVTEXT("CPU"));
-
-	++TrackedSlotIndex;
-
-	if (TrackedSlotIndex <= GMaxSlot)
-	{
-		TWeakObjectPtr<UTextBlock> const NextText = TextFromSlot(TrackedSlotIndex);
-		NextText->SetVisibility(ESlateVisibility::Visible);
-	}
-}
 
 void UScreenPlayerSelect::OnInputBack(int const PlayerIndex)
 {
@@ -112,34 +100,15 @@ void UScreenPlayerSelect::OnInputBack(int const PlayerIndex)
 
 	if (TrackedSlotIndex <= GMaxSlot)
 	{
-		TWeakObjectPtr<UTextBlock> const CurText = TextFromSlot(TrackedSlotIndex);
-		CurText->SetVisibility(ESlateVisibility::Hidden);
+		Part(TrackedSlotIndex)->SetText(FString());
 	}
 
-	--TrackedSlotIndex;
+	PrevTrackedIndex();
 
 	AGameStateMenu* const GameState = GetWorld()->GetGameState<AGameStateMenu>();
 	check(GameState);
 
-	GameState->DisassociateTeam(SlotToTeam[TrackedSlotIndex]);
+	GameState->DisassociateTeam(MatchTeams[TrackedSlotIndex].HomeAway);
 
-	TWeakObjectPtr<UTextBlock> const PrevText = TextFromSlot(TrackedSlotIndex);
-	PrevText->SetVisibility(ESlateVisibility::Visible);
-	PrevText->SetText(INVTEXT("CHOOSE"));
-}
-
-TWeakObjectPtr<UTextBlock> UScreenPlayerSelect::TextFromSlot(uint const SlotIndex) const
-{
-	switch (SlotIndex)
-	{
-		case 0:
-			return TextHome;
-		case 1:
-			return TextAway1;
-		case 2:
-			return TextAway2;
-		default:
-			checkNoEntry();
-	}
-	return nullptr;
+	Part(TrackedSlotIndex)->SetText(TEXT("CHOOSE"));;
 }

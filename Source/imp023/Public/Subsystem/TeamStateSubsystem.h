@@ -3,11 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/CompTeam.h"
+#include "Enum/ETeam.h"
 #include "Data/PlayerData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TeamStateSubsystem.generated.h"
 
+struct FLeagueTeamForMatch;
 class UTeamData;
 /**
  *
@@ -18,7 +19,7 @@ class IMP023_API UTeamStateSubsystem : public UGameInstanceSubsystem
 	GENERATED_BODY()
 
 public:
-	void InitializeTeams();
+	void InitializeTeams(TArray<FLeagueTeamForMatch> const& TeamData);
 
 	UTexture2D* GetLogo(UObject* const Outer, ETeam const Team) const;
 	FLinearColor GetColor(ETeam Team) const;
@@ -26,5 +27,5 @@ public:
 	UPlayerData const* GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const;
 
 private:
-	TMap<ETeam,UTeamData*> TeamMap;
+	TMap<ETeam,UTeamData const*> TeamMap;
 };

@@ -3,9 +3,9 @@
 #include "Actor/Gameplay/GameModeGameplay.h"
 
 #include "Actor/Gameplay/GameStateGameplay.h"
-#include "Component/CompLocator.h"
-#include "Component/CompTeam.h"
-#include "Component/CompZone.h"
+#include "Enum/ELocator.h"
+#include "Enum/ETeam.h"
+#include "Enum/EZone.h"
 #include "Utils/GameplayUtils.h"
 #include "Actor/Player/PlayerPawn.h"
 #include "GameFramework/PlayerStart.h"

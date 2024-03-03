@@ -5,37 +5,41 @@
 #include "CoreMinimal.h"
 #include "Subsystem/LeagueSubsystem.h"
 #include "UI/Manager/Screen.h"
-#include "ScreenPlayerSelect.generated.h"
+#include "ScreenTeamSelect.generated.h"
 
 class UPartTeam;
 /**
  *
  */
 UCLASS()
-class IMP023_API UScreenPlayerSelect : public UScreen
+class IMP023_API UScreenTeamSelect : public UScreen
 {
 	GENERATED_BODY()
 
 protected:
 	virtual void NativeOnInitialized() override;
-
-protected:
 	virtual void OnInputMain(int const PlayerIndex) override;
 	virtual void OnInputBack(int const PlayerIndex) override;
 
-private:
-	UPartTeam* Part(uint const Slot) const;
-	void NextTrackedIndex();
-	void PrevTrackedIndex();
 
 private:
 	UPROPERTY()
-	UPartTeam* TeamHome;
+	UPartTeam* Team1;
 	UPROPERTY()
-	UPartTeam* TeamAway1;
+	UPartTeam* Team2;
 	UPROPERTY()
-	UPartTeam* TeamAway2;
+	UPartTeam* Team3;
+	UPROPERTY()
+	UPartTeam* Team4;
+	UPROPERTY()
+	UPartTeam* Team5;
+	UPROPERTY()
+	UPartTeam* Team6;
+	UPROPERTY()
+	UPartTeam* Team7;
+	UPROPERTY()
+	UPartTeam* Team8;
 
-	TArray<FLeagueTeamForMatch> MatchTeams;
 	uint TrackedSlotIndex;
+	TArray<FLeagueTeam> Teams;
 };

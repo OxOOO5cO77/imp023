@@ -4,17 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Enum/EZone.h"
 #include "CompZone.generated.h"
 
-UENUM(BlueprintType)
-enum class EZone : uint8
-{
-	Middle,
-	North,
-	East,
-	South,
-	West,
-};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class IMP023_API UCompZone : public UActorComponent

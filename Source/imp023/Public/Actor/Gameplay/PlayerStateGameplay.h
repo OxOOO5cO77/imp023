@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/CompTeam.h"
+#include "Enum/ETeam.h"
 #include "GameFramework/PlayerState.h"
 #include "PlayerStateGameplay.generated.h"
 

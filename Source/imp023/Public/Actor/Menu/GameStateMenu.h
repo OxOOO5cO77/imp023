@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actor/Menu/PlayerControllerMenu.h"
-#include "Component/CompTeam.h"
+#include "Enum/ETeam.h"
 #include "GameFramework/GameStateBase.h"
 #include "UI/Manager/ScreenManager.h"
 #include "GameStateMenu.generated.h"
@@ -26,6 +26,8 @@ public:
 	void ProcessInputAlt(APlayerControllerMenu const* PlayerControllerMenu) const;
 	void ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const;
 
+	void SetExpectedHumans(uint const Humans);
+	uint GetExpectedHumans() const;
 	bool SetPlayerToTeam(int const PlayerIndex, ETeam const Team);
 	void DisassociateTeam(ETeam const Team);
 
@@ -38,4 +40,6 @@ private:
 
 	UPROPERTY()
 	UScreenManager* ScreenManager;
+
+	uint ExpectedHumans;
 };

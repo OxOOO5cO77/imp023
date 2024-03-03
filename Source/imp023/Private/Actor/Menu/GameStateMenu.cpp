@@ -38,6 +38,16 @@ void AGameStateMenu::ProcessInputBack(APlayerControllerMenu const* PlayerControl
 	ScreenManager->HandleInputBack(ControllerIndex(PlayerControllerMenu));
 }
 
+void AGameStateMenu::SetExpectedHumans(uint const Humans)
+{
+	ExpectedHumans = Humans;
+}
+
+uint AGameStateMenu::GetExpectedHumans() const
+{
+	return ExpectedHumans;
+}
+
 static bool PlayerStateMenuIsTeam(APlayerState* const PlayerState, ETeam const Team)
 {
 	APlayerStateMenu const* const PlayerStateMenu = Cast<APlayerStateMenu const>(PlayerState);

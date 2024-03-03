@@ -3,8 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Component/CompTeam.h"
-#include "Component/CompZone.h"
+#include "Enum/ETeam.h"
+#include "Enum/EZone.h"
 #include "GameFramework/GameModeBase.h"
 #include "GameModeGameplay.generated.h"
 

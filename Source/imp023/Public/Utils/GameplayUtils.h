@@ -2,9 +2,9 @@
 
 #pragma once
 
-#include "Component/CompLocator.h"
-#include "Component/CompTeam.h"
-#include "Component/CompZone.h"
+#include "Enum/ELocator.h"
+#include "Enum/ETeam.h"
+#include "Enum/EZone.h"
 #include "Data/PlayerData.h"
 
 class FGameplayUtils

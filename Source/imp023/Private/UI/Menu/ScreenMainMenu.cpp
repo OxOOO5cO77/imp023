@@ -8,5 +8,5 @@ void UScreenMainMenu::OnInputMain(int const PlayerIndex)
 {
 	Super::OnInputMain(PlayerIndex);
 
-	ScreenManager->NavigateTo("PlayerSelect");
+	ScreenManager->NavigateTo("Humans");
 }

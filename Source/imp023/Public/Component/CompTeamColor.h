@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "CompTeam.h"
+#include "Enum/ETeam.h"
 #include "Components/ActorComponent.h"
 #include "CompTeamColor.generated.h"
 
