@@ -38,6 +38,11 @@ void AGameStateMenu::ProcessInputBack(APlayerControllerMenu const* PlayerControl
 	ScreenManager->HandleInputBack(ControllerIndex(PlayerControllerMenu));
 }
 
+void AGameStateMenu::ProcessInputMove(APlayerControllerMenu const* PlayerControllerMenu, FVector2D const& Direction ) const
+{
+	ScreenManager->HandleInputMove(ControllerIndex(PlayerControllerMenu), Direction);
+}
+
 void AGameStateMenu::SetExpectedHumans(uint const Humans)
 {
 	ExpectedHumans = Humans;

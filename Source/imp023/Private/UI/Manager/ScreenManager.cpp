@@ -34,17 +34,50 @@ void UScreenManager::NavigateTo(FString const& Screen)
 	CurScreen->AddToViewport();
 }
 
-void UScreenManager::HandleInputMain(int const Idx) const
+void UScreenManager::HandleInputMain(int const ControllerIndex) const
 {
-	CurScreen->HandleInputMain(Idx);
+	CurScreen->OnInputMain(ControllerIndex);
 }
 
-void UScreenManager::HandleInputAlt(int const Idx) const
+void UScreenManager::HandleInputAlt(int const ControllerIndex) const
 {
-	CurScreen->HandleInputAlt(Idx);
+	CurScreen->OnInputAlt(ControllerIndex);
 }
 
-void UScreenManager::HandleInputBack(int const Idx) const
+void UScreenManager::HandleInputBack(int const ControllerIndex) const
 {
-	CurScreen->HandleInputBack(Idx);
+	CurScreen->OnInputBack(ControllerIndex);
+}
+
+void UScreenManager::HandleInputMove(int const ControllerIndex, FVector2D const& Direction) const
+{
+	FVector2D const AbsDirection = Direction.GetAbs();
+
+	if( AbsDirection.IsNearlyZero())
+	{
+		return;
+	}
+
+	if (AbsDirection.X > AbsDirection.Y)
+	{
+		if( Direction.X > 0 )
+		{
+			CurScreen->OnInputRight(ControllerIndex);
+		}
+		else
+		{
+			CurScreen->OnInputLeft(ControllerIndex);
+		}
+	}
+	else
+	{
+		if( Direction.Y > 0 )
+		{
+			CurScreen->OnInputUp(ControllerIndex);
+		}
+		else
+		{
+			CurScreen->OnInputDown(ControllerIndex);
+		}
+	}
 }

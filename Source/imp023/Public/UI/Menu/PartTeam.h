@@ -19,6 +19,7 @@ class IMP023_API UPartTeam : public UUserWidget
 
 public:
 	void SetLogo(UTeamData const* const TeamData) const;
+	void SetSelectedColor(FLinearColor const& Color) const;
 	void SetText(FString const& Text) const;
 
 private:
@@ -27,4 +28,7 @@ private:
 
 	UPROPERTY()
 	UImage* ImageTeam;
+
+	UPROPERTY()
+	UImage* ImageSelectTeam;
 };

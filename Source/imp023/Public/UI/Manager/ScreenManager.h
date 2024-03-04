@@ -21,9 +21,10 @@ public:
 	void NavigateTo(FString const& Screen);
 
 public:
-	void HandleInputMain(int Idx) const;
-	void HandleInputAlt(int Idx) const;
-	void HandleInputBack(int Idx) const;
+	void HandleInputMain(int ControllerIndex) const;
+	void HandleInputAlt(int ControllerIndex) const;
+	void HandleInputBack(int ControllerIndex) const;
+	void HandleInputMove(int ControllerIndex, FVector2D const& Direction) const;
 
 private:
 	UPROPERTY()

@@ -33,17 +33,25 @@ void APlayerControllerMenu::SetupInputComponent()
 	EnhancedInput->BindAction(InputActionMain, ETriggerEvent::Started, this, &APlayerControllerMenu::ActionMain);
 	EnhancedInput->BindAction(InputActionAlt, ETriggerEvent::Started, this, &APlayerControllerMenu::ActionAlt);
 	EnhancedInput->BindAction(InputActionBack, ETriggerEvent::Started, this, &APlayerControllerMenu::ActionBack);
+	EnhancedInput->BindAction(InputActionMove, ETriggerEvent::Started, this, &APlayerControllerMenu::ActionMove);
 }
 
 void APlayerControllerMenu::ActionMain(const FInputActionValue& InputActionValue)
 {
 	GameState->ProcessInputMain(this);
 }
+
 void APlayerControllerMenu::ActionAlt(const FInputActionValue& InputActionValue)
 {
 	GameState->ProcessInputAlt(this);
 }
+
 void APlayerControllerMenu::ActionBack(const FInputActionValue& InputActionValue)
 {
 	GameState->ProcessInputBack(this);
+}
+
+void APlayerControllerMenu::ActionMove(const FInputActionValue& InputActionValue)
+{
+	GameState->ProcessInputMove(this, InputActionValue.Get<FVector2D>());
 }

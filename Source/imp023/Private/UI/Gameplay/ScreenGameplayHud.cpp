@@ -52,7 +52,7 @@ void UScreenGameplayHud::HandleDelayTimer()
 	float const DelayScale = Delay - DelayValue + 0.1f;
 
 	TextDelay->SetText(FText::AsNumber(DelayValue + 1));
-	TextDelay->SetRenderScale(FVector2d::One() * DelayScale);
+	TextDelay->SetRenderScale(FVector2D::One() * DelayScale);
 
 	bDelayTimer = Delay > 0.0f;
 	if (!bDelayTimer)

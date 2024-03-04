@@ -26,6 +26,7 @@ private:
 	void ActionMain(const FInputActionValue& InputActionValue);
 	void ActionAlt(const FInputActionValue& InputActionValue);
 	void ActionBack(const FInputActionValue& InputActionValue);
+	void ActionMove(const FInputActionValue& InputActionValue);
 
 private:
 	UPROPERTY(EditAnywhere, Category="Input", meta = (AllowPrivateAccess = "true"))
@@ -36,6 +37,8 @@ private:
 	UInputAction const* InputActionAlt;
 	UPROPERTY(EditAnywhere, Category="Input", meta = (AllowPrivateAccess = "true"))
 	UInputAction const* InputActionBack;
+	UPROPERTY(EditAnywhere, Category="Input", meta = (AllowPrivateAccess = "true"))
+	UInputAction const* InputActionMove;
 
 private:
 	UPROPERTY()

@@ -12,6 +12,11 @@ void UPartTeam::SetLogo(UTeamData const* const TeamData) const
 	ImageTeam->SetBrushFromTexture(TeamData->Logo.LoadSynchronous());
 }
 
+void UPartTeam::SetSelectedColor(FLinearColor const& Color) const
+{
+	ImageSelectTeam->SetBrushTintColor(Color);
+}
+
 void UPartTeam::SetText(FString const& Text) const
 {
 	TextTeam->SetVisibility(Text.IsEmpty() ? ESlateVisibility::Hidden : ESlateVisibility::Visible);

@@ -34,7 +34,7 @@ void UScreenPlayerSelect::NativeOnInitialized()
 
 	if (TrackedSlotIndex < 3)
 	{
-		Part(TrackedSlotIndex)->SetText(TEXT("CHOOSE"));
+		Part(TrackedSlotIndex)->SetText(TEXT("PRESS START"));
 	}
 }
 
@@ -85,7 +85,7 @@ void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 
 		if (TrackedSlotIndex <= GMaxSlot)
 		{
-			Part(TrackedSlotIndex)->SetText(TEXT("CHOOSE"));;
+			Part(TrackedSlotIndex)->SetText(TEXT("PRESS START"));;
 		}
 	}
 }
@@ -110,5 +110,5 @@ void UScreenPlayerSelect::OnInputBack(int const PlayerIndex)
 
 	GameState->DisassociateTeam(MatchTeams[TrackedSlotIndex].HomeAway);
 
-	Part(TrackedSlotIndex)->SetText(TEXT("CHOOSE"));;
+	Part(TrackedSlotIndex)->SetText(TEXT("PRESS START"));;
 }

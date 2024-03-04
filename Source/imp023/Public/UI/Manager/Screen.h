@@ -17,14 +17,15 @@ class IMP023_API UScreen : public UUserWidget
 
 public:
 	void Attach(UScreenManager* const Manager);
-	void HandleInputMain(int const Idx);
-	void HandleInputAlt(int const Idx);
-	void HandleInputBack(int const Idx);
 
-protected:
-	virtual void OnInputMain(int const Idx);
-	virtual void OnInputAlt(int const Idx);
-	virtual void OnInputBack(int const Idx);
+public:
+	virtual void OnInputMain(int const ControllerIndex) {}
+	virtual void OnInputAlt(int const ControllerIndex) {}
+	virtual void OnInputBack(int const ControllerIndex) {}
+	virtual void OnInputUp(int const ControllerIndex) {}
+	virtual void OnInputDown(int const ControllerIndex) {}
+	virtual void OnInputLeft(int const ControllerIndex) {}
+	virtual void OnInputRight(int const ControllerIndex) {}
 
 protected:
 	UPROPERTY()

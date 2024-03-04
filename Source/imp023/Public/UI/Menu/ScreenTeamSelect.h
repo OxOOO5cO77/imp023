@@ -20,7 +20,13 @@ protected:
 	virtual void NativeOnInitialized() override;
 	virtual void OnInputMain(int const PlayerIndex) override;
 	virtual void OnInputBack(int const PlayerIndex) override;
+	virtual void OnInputUp(int const PlayerIndex) override;
+	virtual void OnInputDown(int const PlayerIndex) override;
 
+private:
+	UPartTeam const* Part(uint const Index) const;
+	void NextTrackedIndex();
+	void PrevTrackedIndex();
 
 private:
 	UPROPERTY()

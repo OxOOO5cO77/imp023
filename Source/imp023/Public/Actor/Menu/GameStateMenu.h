@@ -25,6 +25,7 @@ public:
 	void ProcessInputMain(APlayerControllerMenu const* PlayerControllerMenu) const;
 	void ProcessInputAlt(APlayerControllerMenu const* PlayerControllerMenu) const;
 	void ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const;
+	void ProcessInputMove(APlayerControllerMenu const* PlayerControllerMenu, FVector2D const& Direction) const;
 
 	void SetExpectedHumans(uint const Humans);
 	uint GetExpectedHumans() const;
