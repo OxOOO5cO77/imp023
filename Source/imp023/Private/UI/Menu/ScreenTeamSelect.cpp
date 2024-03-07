@@ -41,7 +41,7 @@ void UScreenTeamSelect::OnInputMain(int const PlayerIndex)
 	AGameStateMenu const* const GameState = GetWorld()->GetGameState<AGameStateMenu>();
 	check(GameState);
 
-	uint HumanTeams = Algo::CountIf(Teams, [](FLeagueTeam const& LeagueTeam) { return LeagueTeam.Controller == ELeagueController::Human; });
+	uint32 HumanTeams = Algo::CountIf(Teams, [](FLeagueTeam const& LeagueTeam) { return LeagueTeam.Controller == ELeagueController::Human; });
 	if (HumanTeams == GameState->GetExpectedHumans())
 	{
 		ULeagueSubsystem* const LeagueSubsystem = GetGameInstance()->GetSubsystem<ULeagueSubsystem>();
@@ -65,7 +65,7 @@ void UScreenTeamSelect::OnInputDown(int const PlayerIndex)
 	NextTrackedIndex();
 }
 
-UPartTeam const* UScreenTeamSelect::Part(uint const Index) const
+UPartTeam const* UScreenTeamSelect::Part(uint32 const Index) const
 {
 	static UPartTeam const* const PartTeam[GTeamCount] = {Team1, Team2, Team3, Team4, Team5, Team6, Team7, Team8};
 	return PartTeam[Index];

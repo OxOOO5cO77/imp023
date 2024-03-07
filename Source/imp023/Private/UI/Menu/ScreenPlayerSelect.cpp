@@ -38,7 +38,7 @@ void UScreenPlayerSelect::NativeOnInitialized()
 	}
 }
 
-UPartTeam* UScreenPlayerSelect::Part(uint const Slot) const
+UPartTeam* UScreenPlayerSelect::Part(uint32 const Slot) const
 {
 	static UPartTeam* const Parts[3] = {TeamHome, TeamAway1, TeamAway2};
 	return Parts[Slot];

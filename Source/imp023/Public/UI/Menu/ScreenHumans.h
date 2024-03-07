@@ -34,5 +34,5 @@ private:
 	UPROPERTY()
 	UTextBlock* TextHuman;
 
-	uint TrackedHumans;
+	uint32 TrackedHumans;
 };

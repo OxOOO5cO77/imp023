@@ -24,7 +24,7 @@ protected:
 	virtual void OnInputBack(int const PlayerIndex) override;
 
 private:
-	UPartTeam* Part(uint const Slot) const;
+	UPartTeam* Part(uint32 const Slot) const;
 	void NextTrackedIndex();
 	void PrevTrackedIndex();
 
@@ -37,5 +37,5 @@ private:
 	UPartTeam* TeamAway2;
 
 	TArray<FLeagueTeamForMatch> MatchTeams;
-	uint TrackedSlotIndex;
+	uint32 TrackedSlotIndex;
 };

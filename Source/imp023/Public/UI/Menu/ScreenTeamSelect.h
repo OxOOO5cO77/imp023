@@ -24,7 +24,7 @@ protected:
 	virtual void OnInputDown(int const PlayerIndex) override;
 
 private:
-	UPartTeam const* Part(uint const Index) const;
+	UPartTeam const* Part(uint32 const Index) const;
 	void NextTrackedIndex();
 	void PrevTrackedIndex();
 
@@ -46,6 +46,6 @@ private:
 	UPROPERTY()
 	UPartTeam* Team8;
 
-	uint TrackedSlotIndex;
+	uint32 TrackedSlotIndex;
 	TArray<FLeagueTeam> Teams;
 };

@@ -27,8 +27,8 @@ public:
 	void ProcessInputBack(APlayerControllerMenu const* PlayerControllerMenu) const;
 	void ProcessInputMove(APlayerControllerMenu const* PlayerControllerMenu, FVector2D const& Direction) const;
 
-	void SetExpectedHumans(uint const Humans);
-	uint GetExpectedHumans() const;
+	void SetExpectedHumans(uint32 const Humans);
+	uint32 GetExpectedHumans() const;
 	bool SetPlayerToTeam(int const PlayerIndex, ETeam const Team);
 	void DisassociateTeam(ETeam const Team);
 
@@ -42,5 +42,5 @@ private:
 	UPROPERTY()
 	UScreenManager* ScreenManager;
 
-	uint ExpectedHumans;
+	uint32 ExpectedHumans;
 };

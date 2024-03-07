@@ -7,7 +7,7 @@
 #include "Components/TextBlock.h"
 #include "UI/Manager/ScreenManager.h"
 
-static constexpr uint GMaxHumans = 8;
+static constexpr uint32 GMaxHumans = 8;
 
 void UScreenHumans::NativeConstruct()
 {
