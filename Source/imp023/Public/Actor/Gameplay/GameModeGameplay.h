@@ -23,7 +23,7 @@ public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 private:
-	static void PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team);
+	static void PossessWithTeam(AGameStateGameplay* const GameStateGameplay, APlayerPawn* const Player, ETeam const Team);
 	void OnChangeZone(EZone const PreviousZone, EZone const CurrentZone) const;
 
 public:

@@ -14,10 +14,10 @@ void AAIControllerGameplay::BeginPlay()
 
 	RunBehaviorTree(AIBehavior);
 
-	UBlackboardComponent* const Blackboard = GetBlackboardComponent();
+	UBlackboardComponent* const BlackboardComponent = GetBlackboardComponent();
 
 	AActor* const Ball = UGameplayStatics::GetActorOfClass(this, ABall::StaticClass());
-	Blackboard->SetValueAsObject(TEXT("Ball"), Ball);
+	BlackboardComponent->SetValueAsObject(TEXT("Ball"), Ball);
 }
 
 void AAIControllerGameplay::Tick(float const DeltaSeconds)

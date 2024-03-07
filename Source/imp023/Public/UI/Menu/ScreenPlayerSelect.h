@@ -24,7 +24,7 @@ protected:
 	virtual void OnInputBack(int const PlayerIndex) override;
 
 private:
-	UPartTeam* Part(uint32 const Slot) const;
+	UPartTeam* Part(uint32 const PartIndex) const;
 	void NextTrackedIndex();
 	void PrevTrackedIndex();
 

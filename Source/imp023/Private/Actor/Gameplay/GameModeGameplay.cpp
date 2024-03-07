@@ -19,10 +19,10 @@ void AGameModeGameplay::BeginPlay()
 	TArray<AActor*> Starts;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), Starts);
 
-	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
-	check(GameState);
+	AGameStateGameplay* GameStateGameplay = GetGameState<AGameStateGameplay>();
+	check(GameStateGameplay);
 
-	OnChangeZoneHandle = GameState->ChangeZoneEvent.AddUObject(this, &AGameModeGameplay::OnChangeZone);
+	OnChangeZoneHandle = GameStateGameplay->ChangeZoneEvent.AddUObject(this, &AGameModeGameplay::OnChangeZone);
 
 	for (AActor const* Start : Starts)
 	{
@@ -39,13 +39,13 @@ void AGameModeGameplay::BeginPlay()
 
 		APlayerPawn* const Player = Cast<APlayerPawn>(World->SpawnActor(DefaultPawnClass, &Start->GetActorTransform()));
 
-		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeamPeriod(Zone, Zone, Locator, GameState->Period);
+		ETeam const Team = FGameplayUtils::MapZoneLocatorToTeamPeriod(Zone, Zone, Locator, GameStateGameplay->Period);
 
 		Player->InitComponents(Zone, Locator, Team);
 
 		if (Zone == EZone::Middle)
 		{
-			PossessWithTeam(GameState, Player, Team);
+			PossessWithTeam(GameStateGameplay, Player, Team);
 		}
 	}
 }
@@ -54,15 +54,15 @@ void AGameModeGameplay::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 
-	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
-	check(GameState);
+	AGameStateGameplay* GameStateGameplay = GetGameState<AGameStateGameplay>();
+	check(GameStateGameplay);
 
-	GameState->ChangeZoneEvent.Remove(OnChangeZoneHandle);
+	GameStateGameplay->ChangeZoneEvent.Remove(OnChangeZoneHandle);
 }
 
-void AGameModeGameplay::PossessWithTeam(AGameStateGameplay* const GameState, APlayerPawn* const Player, ETeam const Team)
+void AGameModeGameplay::PossessWithTeam(AGameStateGameplay* const GameStateGameplay, APlayerPawn* const Player, ETeam const Team)
 {
-	APlayerController* const Controller = GameState->GetPlayerControllerFromTeam(Team);
+	APlayerController* const Controller = GameStateGameplay->GetPlayerControllerFromTeam(Team);
 
 	if (Controller != nullptr)
 	{
@@ -181,11 +181,12 @@ void AGameModeGameplay::HandlePossession(EZone const Zone) const
 
 	TArray<AActor*> FilteredPlayers = Players.FilterByPredicate([Zone](AActor const* const Actor) { return IsInZone(Actor, Zone); });
 
-	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
+	AGameStateGameplay* const GameStateGameplay = GetGameState<AGameStateGameplay>();
+	check(GameStateGameplay);
 
 	for (AActor* FilteredPlayer : FilteredPlayers)
 	{
 		APlayerPawn* const Player = Cast<APlayerPawn>(FilteredPlayer);
-		PossessWithTeam(GameState, Player, Player->GetTeam());
+		PossessWithTeam(GameStateGameplay, Player, Player->GetTeam());
 	}
 }
