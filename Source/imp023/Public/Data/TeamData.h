@@ -24,7 +24,7 @@ public:
 	UPROPERTY(EditAnywhere)
 	FString Abbrev;
 	UPROPERTY(EditAnywhere)
-	TAssetPtr<UTexture2D> Logo;
+	TSoftObjectPtr<UTexture2D> Logo;
 	UPROPERTY(EditAnywhere, meta=(HideAlphaChannel))
 	FLinearColor Color;
 	UPROPERTY(EditAnywhere, meta=(NoElementDuplicate))

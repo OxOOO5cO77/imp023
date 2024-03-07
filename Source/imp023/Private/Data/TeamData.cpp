@@ -31,7 +31,7 @@ void UTeamData::Validate_PlayerCount(FDataValidationContext& Context, EDataValid
 
 void UTeamData::Validate_PlayerValidCount(FDataValidationContext& Context, EDataValidationResult& Result) const
 {
-	int const ValidCount = Algo::CountIf(Players, [](TAssetPtr<UPlayerData> const& Player) { return !Player.IsValid(); });
+	int const ValidCount = Algo::CountIf(Players, [](TSoftObjectPtr<UPlayerData> const& Player) { return !Player.IsValid(); });
 	if (ValidCount > 0)
 	{
 		Context.AddError(FText::FormatOrdered(INVTEXT("Players contains {0} empty members"), ValidCount));
