@@ -137,22 +137,19 @@ void AGameModeGameplay::ResetActorsForZone(EZone const ZoneFrom, EZone const Zon
 {
 	UWorld const* World = GetWorld();
 
-	using namespace std::placeholders;
-	auto const PredIsInZone = std::bind(&IsInZone, _1, ZoneTo);
-
 	TArray<AActor*> Starts;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerStart::StaticClass(), Starts);
-	TArray<AActor*> StartsInZone = Starts.FilterByPredicate(PredIsInZone);
+	TArray<AActor*> StartsInZone = Starts.FilterByPredicate([ZoneTo](AActor const* const Actor) { return IsInZone(Actor, ZoneTo); });
 
 	TArray<AActor*> Players;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerPawn::StaticClass(), Players);
-	TArray<AActor*> PlayersInZone = Players.FilterByPredicate(PredIsInZone);
+	TArray<AActor*> PlayersInZone = Players.FilterByPredicate([ZoneTo](AActor const* const Actor) { return IsInZone(Actor, ZoneTo); });
 
 	for (AActor const* Start : StartsInZone)
 	{
 		if (Start == nullptr)
 		{
-			UE_LOG(LogTemp, Error, TEXT("ResetActorsForZone: start is null for %d->%d"), ZoneFrom, ZoneTo)
+			UE_LOG(LogTemp, Error, TEXT("ResetActorsForZone: start is null for %d->%d"), ZoneFrom, ZoneTo);
 			continue;
 		}
 
@@ -163,12 +160,11 @@ void AGameModeGameplay::ResetActorsForZone(EZone const ZoneFrom, EZone const Zon
 		{
 			continue;
 		}
-		auto const PredIsOnTeam = std::bind(&IsOnTeam, _1, Team);
 
-		AActor** const Result = PlayersInZone.FindByPredicate(PredIsOnTeam);
+		AActor** const Result = PlayersInZone.FindByPredicate([Team](AActor const* const Actor) { return IsOnTeam(Actor, Team); });
 		if (Result == nullptr)
 		{
-			UE_LOG(LogTemp, Error, TEXT("ResetActorsForZone: result is null for %d @ %d (total players in zone: %d)"), ZoneTo, Team, PlayersInZone.Num())
+			UE_LOG(LogTemp, Error, TEXT("ResetActorsForZone: result is null for %d @ %d (total players in zone: %d)"), ZoneTo, Team, PlayersInZone.Num());
 			continue;
 		}
 
@@ -183,8 +179,7 @@ void AGameModeGameplay::HandlePossession(EZone const Zone) const
 	TArray<AActor*> Players;
 	UGameplayStatics::GetAllActorsOfClass(World, APlayerPawn::StaticClass(), Players);
 
-	using namespace std::placeholders;
-	TArray<AActor*> FilteredPlayers = Players.FilterByPredicate(std::bind(&IsInZone, _1, Zone));
+	TArray<AActor*> FilteredPlayers = Players.FilterByPredicate([Zone](AActor const* const Actor) { return IsInZone(Actor, Zone); });
 
 	AGameStateGameplay* GameState = GetGameState<AGameStateGameplay>();
 

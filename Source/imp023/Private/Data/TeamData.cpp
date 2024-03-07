@@ -6,8 +6,6 @@
 #include "Algo/Count.h"
 #include "Misc/DataValidation.h"
 
-using namespace std::placeholders;
-
 static bool PredPlayerPosition(UPlayerData const* const Player, EPlayerPosition const Check)
 {
 	return Player && Player->Position == Check;
@@ -15,7 +13,7 @@ static bool PredPlayerPosition(UPlayerData const* const Player, EPlayerPosition 
 
 UPlayerData const* UTeamData::PlayerByPosition(EPlayerPosition const Position) const
 {
-	UPlayerData const* const* Result = Players.FindByPredicate(std::bind(&PredPlayerPosition, _1, Position));;
+	UPlayerData const* const* Result = Players.FindByPredicate( [Position](UPlayerData const* const PlayerData) { return PredPlayerPosition(PlayerData, Position); });
 	return Result ? *Result : nullptr;
 }
 
@@ -44,7 +42,7 @@ void UTeamData::Validate_PlayerPositions(FDataValidationContext& Context, EDataV
 	EPlayerPosition ToCheck[5] = {EPlayerPosition::Center, EPlayerPosition::Defend, EPlayerPosition::Attack1, EPlayerPosition::Attack2, EPlayerPosition::Frantic};
 	for (EPlayerPosition Check : ToCheck)
 	{
-		int const PositionCount = Algo::CountIf(Players, std::bind(&PredPlayerPosition, _1, Check));
+		int const PositionCount = Algo::CountIf(Players, [Check](UPlayerData const* const PlayerData) { return PredPlayerPosition(PlayerData, Check); });
 		if (PositionCount == 0)
 		{
 			Context.AddError(FText::FormatOrdered(INVTEXT("Players missing Position: {0}"), static_cast<int>(Check)));

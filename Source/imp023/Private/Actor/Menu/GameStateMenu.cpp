@@ -53,7 +53,7 @@ uint32 AGameStateMenu::GetExpectedHumans() const
 	return ExpectedHumans;
 }
 
-static bool PlayerStateMenuIsTeam(APlayerState* const PlayerState, ETeam const Team)
+static bool PlayerStateMenuIsTeam(APlayerState const* const PlayerState, ETeam const Team)
 {
 	APlayerStateMenu const* const PlayerStateMenu = Cast<APlayerStateMenu const>(PlayerState);
 	return PlayerStateMenu != nullptr && PlayerStateMenu->Team == Team;
@@ -67,8 +67,7 @@ bool AGameStateMenu::SetPlayerToTeam(int const PlayerIndex, ETeam const Team)
 		return false;
 	}
 
-	using namespace std::placeholders;
-	bool const bNone = Algo::NoneOf(PlayerArray, std::bind(&PlayerStateMenuIsTeam, _1, Team));
+	bool const bNone = Algo::NoneOf(PlayerArray, [Team](APlayerState const* const PlayerState){ return PlayerStateMenuIsTeam(PlayerState, Team); });
 
 	if (bNone)
 	{
@@ -80,8 +79,7 @@ bool AGameStateMenu::SetPlayerToTeam(int const PlayerIndex, ETeam const Team)
 
 void AGameStateMenu::DisassociateTeam(ETeam const Team)
 {
-	using namespace std::placeholders;
-	TObjectPtr<APlayerState> const* const Found = PlayerArray.FindByPredicate(std::bind(&PlayerStateMenuIsTeam, _1, Team));
+	TObjectPtr<APlayerState> const* const Found = PlayerArray.FindByPredicate([Team](APlayerState const* const PlayerState){ return PlayerStateMenuIsTeam(PlayerState, Team); });
 
 	if (Found != nullptr)
 	{
