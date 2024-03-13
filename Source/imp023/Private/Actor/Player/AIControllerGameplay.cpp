@@ -6,8 +6,6 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
 
-class ABall;
-
 void AAIControllerGameplay::BeginPlay()
 {
 	Super::BeginPlay();
@@ -18,9 +16,4 @@ void AAIControllerGameplay::BeginPlay()
 
 	AActor* const Ball = UGameplayStatics::GetActorOfClass(this, ABall::StaticClass());
 	BlackboardComponent->SetValueAsObject(TEXT("Ball"), Ball);
-}
-
-void AAIControllerGameplay::Tick(float const DeltaSeconds)
-{
-	Super::Tick(DeltaSeconds);
 }

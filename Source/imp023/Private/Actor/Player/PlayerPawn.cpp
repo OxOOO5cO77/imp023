@@ -5,6 +5,7 @@
 #include "Actor/Gameplay/GameStateGameplay.h"
 #include "Actor/Object/Ball.h"
 #include "Component/CompTeamColor.h"
+#include "Data/TeamData.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Subsystem/TeamStateSubsystem.h"
@@ -13,7 +14,7 @@
 // Sets default values
 APlayerPawn::APlayerPawn()
 	: PlayerData(nullptr)
-	  , BoostLimiter(0.0f)
+	, BoostLimiter(0.0f)
 {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -96,9 +97,10 @@ void APlayerPawn::InitComponents(EZone const Zone, ELocator const Locator, ETeam
 
 	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	EPlayerPosition const PlayerPosition = FGameplayUtils::MapZoneTeamToPlayerPosition(Zone, Team);
-	PlayerData = TeamStateSubsystem->GetTeamPlayer(Team, PlayerPosition);
+	UTeamData const* const TeamData = TeamStateSubsystem->GetTeam(Team);
+	PlayerData = TeamData->PlayerByPosition(PlayerPosition);
 
-	UPhysicalMaterial* const PhysicalMaterial = CreateMaterialFromPlayer(PlayerData);
+	UPhysicalMaterial* const PhysicalMaterial = CreateMaterialFromPlayer();
 	CompStaticMeshBase->SetPhysMaterialOverride(PhysicalMaterial);
 	CompStaticMeshBase->OnComponentHit.AddDynamic(this, &APlayerPawn::OnHit);
 }
@@ -120,7 +122,7 @@ void APlayerPawn::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	}
 }
 
-UPhysicalMaterial* APlayerPawn::CreateMaterialFromPlayer(UPlayerData const* const PlayerData)
+UPhysicalMaterial* APlayerPawn::CreateMaterialFromPlayer() const
 {
 	UPhysicalMaterial* PhysicalMaterial = NewObject<UPhysicalMaterial>();
 

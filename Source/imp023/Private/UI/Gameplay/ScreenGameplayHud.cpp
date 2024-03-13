@@ -6,6 +6,7 @@
 #include "Components/Image.h"
 #include "Components/ProgressBar.h"
 #include "Components/TextBlock.h"
+#include "Data/TeamData.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
 void UScreenGameplayHud::NativeOnInitialized()
@@ -24,13 +25,17 @@ void UScreenGameplayHud::NativeOnInitialized()
 	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
 
-	BarPeriod1->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Home));
-	BarPeriod2->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Away1));
-	BarPeriod3->SetFillColorAndOpacity(TeamStateSubsystem->GetColor(ETeam::Away2));
+	UTeamData const* const Home = TeamStateSubsystem->GetTeam(ETeam::Home);
+	UTeamData const* const Away1 = TeamStateSubsystem->GetTeam(ETeam::Away1);
+	UTeamData const* const Away2 = TeamStateSubsystem->GetTeam(ETeam::Away2);
 
-	ImageLogoHome->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Home));
-	ImageLogoAway1->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Away1));
-	ImageLogoAway2->SetBrushFromTexture(TeamStateSubsystem->GetLogo(this, ETeam::Away2));
+	BarPeriod1->SetFillColorAndOpacity(Home->Color);
+	BarPeriod2->SetFillColorAndOpacity(Away1->Color);
+	BarPeriod3->SetFillColorAndOpacity(Away2->Color);
+
+	ImageLogoHome->SetBrushFromTexture(Home->Logo.LoadSynchronous());
+	ImageLogoAway1->SetBrushFromTexture(Away1->Logo.LoadSynchronous());
+	ImageLogoAway2->SetBrushFromTexture(Away2->Logo.LoadSynchronous());
 
 	bDelayTimer = true;
 }

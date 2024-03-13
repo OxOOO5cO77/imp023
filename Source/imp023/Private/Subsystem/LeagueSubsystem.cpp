@@ -3,18 +3,50 @@
 
 #include "Subsystem/LeagueSubsystem.h"
 
+#include "Data/TeamData.h"
+
+bool FLeagueTeam::operator==(uint32 const ID) const
+{
+	return Team->ID == ID;
+}
+
 void ULeagueSubsystem::InitializeLeague(TArray<FLeagueTeam> const& Teams)
 {
 	LeagueTeams = Teams;
+
+	for (int a = 0; a < Teams.Num(); ++a)
+	{
+		for (int b = 0; b < Teams.Num(); ++b)
+		{
+			for (int c = 0; c < Teams.Num(); ++c)
+			{
+				if (a != b && a != c && b != c)
+				{
+					TArray<FLeagueTeamForMatch> Match;
+
+					Match.Emplace(Teams[a].Team, Teams[a].Controller, ETeam::Home);
+					Match.Emplace(Teams[b].Team, Teams[b].Controller, ETeam::Away1);
+					Match.Emplace(Teams[c].Team, Teams[c].Controller, ETeam::Away2);
+
+					Schedule.Add(Match);
+				}
+			}
+		}
+	}
 }
 
-TArray<FLeagueTeamForMatch> ULeagueSubsystem::NextMatchTeams() const
+TArray<FLeagueTeamForMatch> const& ULeagueSubsystem::NextMatchTeams() const
 {
-	TArray<FLeagueTeamForMatch> Result;
+	return Schedule[DayIndex];
+}
 
-	Result.Emplace(LeagueTeams[0].Team, LeagueTeams[0].Controller, ETeam::Home);
-	Result.Emplace(LeagueTeams[1].Team, LeagueTeams[1].Controller, ETeam::Away1);
-	Result.Emplace(LeagueTeams[2].Team, LeagueTeams[2].Controller, ETeam::Away2);
+void ULeagueSubsystem::MatchComplete()
+{
+	DayIndex = (DayIndex + 1) % Schedule.Num();
+}
 
-	return Result;
+TTuple<int, int, int> ULeagueSubsystem::GetWinLoseDraw(uint32 const ID) const
+{
+	FLeagueTeam const* const LeagueTeam = LeagueTeams.FindByKey(ID);
+	return MakeTuple(LeagueTeam->Win, LeagueTeam->Lose, LeagueTeam->Draw);
 }

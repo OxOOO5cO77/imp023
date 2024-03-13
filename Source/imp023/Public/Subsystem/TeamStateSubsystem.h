@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Enum/ETeam.h"
-#include "Data/PlayerData.h"
 #include "Subsystems/GameInstanceSubsystem.h"
 #include "TeamStateSubsystem.generated.h"
 
@@ -21,10 +20,7 @@ class IMP023_API UTeamStateSubsystem : public UGameInstanceSubsystem
 public:
 	void InitializeTeams(TArray<FLeagueTeamForMatch> const& TeamData);
 
-	UTexture2D* GetLogo(UObject* const Outer, ETeam const Team) const;
-	FLinearColor GetColor(ETeam Team) const;
-	FString GetAbbrev(ETeam Team) const;
-	UPlayerData const* GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const;
+	UTeamData const* GetTeam(ETeam const Team) const;
 
 private:
 	TMap<ETeam,UTeamData const*> TeamMap;

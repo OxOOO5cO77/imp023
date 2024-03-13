@@ -10,6 +10,7 @@
 #include "Subsystem/TeamStateSubsystem.h"
 #include "PlayerPawn.generated.h"
 
+class UPlayerData;
 class UCompTeamColor;
 class ABall;
 
@@ -40,7 +41,7 @@ private:
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, FHitResult const& Hit);
 
 private:
-	static UPhysicalMaterial* CreateMaterialFromPlayer(UPlayerData const* const PlayerData);
+	UPhysicalMaterial* CreateMaterialFromPlayer() const;
 
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))

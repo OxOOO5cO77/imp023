@@ -20,19 +20,27 @@ struct FLeagueTeam
 {
 	FLeagueTeam(UTeamData const* const InTeam, ELeagueController const InController)
 		: Team(InTeam)
-		  , Controller(InController)
+		, Controller(InController)
+		, Win(0)
+		, Lose(0)
+		, Draw(0)
 	{
 	}
 
+	bool operator==(uint32 const ID) const;
+
 	UTeamData const* const Team;
 	ELeagueController Controller;
+	int Win;
+	int Lose;
+	int Draw;
 };
 
 struct FLeagueTeamForMatch : public FLeagueTeam
 {
 	FLeagueTeamForMatch(UTeamData const* const InTeam, ELeagueController const InController, ETeam const InHomeAway)
 		: FLeagueTeam(InTeam, InController)
-		  , HomeAway(InHomeAway)
+		, HomeAway(InHomeAway)
 	{
 	}
 
@@ -50,8 +58,12 @@ class IMP023_API ULeagueSubsystem : public UGameInstanceSubsystem
 public:
 	void InitializeLeague(TArray<FLeagueTeam> const& Teams);
 
-	TArray<FLeagueTeamForMatch> NextMatchTeams() const;
+	TArray<FLeagueTeamForMatch> const& NextMatchTeams() const;
+	void MatchComplete();
+	TTuple<int,int,int> GetWinLoseDraw(uint32 const ID) const;
 
 private:
 	TArray<FLeagueTeam> LeagueTeams;
+	int DayIndex;
+	TArray<TArray<FLeagueTeamForMatch>> Schedule;
 };

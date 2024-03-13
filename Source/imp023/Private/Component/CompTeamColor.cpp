@@ -3,6 +3,7 @@
 #include "Component/CompTeamColor.h"
 
 #include "Component/CompTeam.h"
+#include "Data/TeamData.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
 class UTeamStateSubsystem;
@@ -40,9 +41,9 @@ void UCompTeamColor::SetTeamColor(ETeam const Team) const
 	UStaticMeshComponent* const CompStaticMesh = CastChecked<UStaticMeshComponent>(OwningActor->GetComponentByClass(UStaticMeshComponent::StaticClass()));
 
 	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
-	FLinearColor const Color = TeamStateSubsystem->GetColor(Team);
+	UTeamData const* const TeamData = TeamStateSubsystem->GetTeam(Team);
 
 	UMaterialInstanceDynamic* Material = CompStaticMesh->CreateDynamicMaterialInstance(0);
-	Material->SetVectorParameterValue("TeamColor", Color);
+	Material->SetVectorParameterValue("TeamColor", TeamData->Color);
 	CompStaticMesh->SetMaterial(0, Material);
 }

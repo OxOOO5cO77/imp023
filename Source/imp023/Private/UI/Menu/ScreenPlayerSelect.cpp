@@ -20,8 +20,9 @@ void UScreenPlayerSelect::NativeOnInitialized()
 
 	for (int i = 0; i < 3; ++i)
 	{
-		Part(i)->SetLogo(MatchTeams[i].Team);
-		Part(i)->SetText(MatchTeams[i].Controller == ELeagueController::Human ? FString() : TEXT("CPU"));;
+		UPartTeam* const PartTeam = Part(i);
+		PartTeam->SetLogo(MatchTeams[i].Team);
+		PartTeam->SetText(MatchTeams[i].Controller == ELeagueController::Human ? FString() : TEXT("CPU"));;
 	}
 
 	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();

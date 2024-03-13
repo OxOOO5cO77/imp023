@@ -9,6 +9,7 @@
 #include "Components/TextBlock.h"
 
 #include "Data/PlayerData.h"
+#include "Data/TeamData.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
 class UTeamStateSubsystem;
@@ -27,14 +28,16 @@ void UScreenGoal::NativeOnInitialized()
 	if (GoalPlayer != nullptr)
 	{
 		TextGoalPlayer->SetText(FText::FromString(GoalPlayer->Name));
-		TextGoalTeam->SetText(FText::FromString(TeamStateSubsystem->GetAbbrev(GoalTeam)));
+		UTeamData const* const TeamData = TeamStateSubsystem->GetTeam(GoalTeam);
+		TextGoalTeam->SetText(FText::FromString(TeamData->Abbrev));
 	}
 
 	BoxOwnGoal->SetVisibility(OwnGoalPlayer != nullptr ? ESlateVisibility::Visible : ESlateVisibility::Hidden);
 	if (OwnGoalPlayer != nullptr)
 	{
 		TextOwnGoalPlayer->SetText(FText::FromString(OwnGoalPlayer->Name));
-		TextOwnGoalTeam->SetText(FText::FromString(TeamStateSubsystem->GetAbbrev(OwnGoalTeam)));
+		UTeamData const* const TeamData = TeamStateSubsystem->GetTeam(GoalTeam);
+		TextOwnGoalTeam->SetText(FText::FromString(TeamData->Abbrev));
 	}
 
 	TextTimeOfGoal->SetText(FText::FormatOrdered(INVTEXT("{0}s"), TimeOfGoal));

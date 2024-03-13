@@ -3,7 +3,6 @@
 
 #include "Subsystem/TeamStateSubsystem.h"
 
-#include "Data/TeamData.h"
 #include "Subsystem/LeagueSubsystem.h"
 
 void UTeamStateSubsystem::InitializeTeams(TArray<FLeagueTeamForMatch> const& TeamData)
@@ -15,29 +14,7 @@ void UTeamStateSubsystem::InitializeTeams(TArray<FLeagueTeamForMatch> const& Tea
 	TeamMap.Emplace(ETeam::Away2, TeamData[2].Team);
 }
 
-UTexture2D* UTeamStateSubsystem::GetLogo(UObject* const Outer, ETeam const Team) const
+UTeamData const* UTeamStateSubsystem::GetTeam(ETeam const Team) const
 {
-	UTeamData const* const TeamData = TeamMap[Team];
-	check(TeamData);
-	return TeamData->Logo.LoadSynchronous();
-}
-
-FLinearColor UTeamStateSubsystem::GetColor(ETeam const Team) const
-{
-	UTeamData const* const TeamData = TeamMap[Team];
-	check(TeamData);
-	return TeamData->Color;
-}
-
-FString UTeamStateSubsystem::GetAbbrev(ETeam Team) const
-{
-	UTeamData const* const TeamData = TeamMap[Team];
-	check(TeamData);
-	return TeamData->Abbrev;
-}
-
-UPlayerData const* UTeamStateSubsystem::GetTeamPlayer(ETeam const Team, EPlayerPosition const PlayerPosition) const
-{
-	UTeamData const* const TeamData = TeamMap[Team];
-	return TeamData->PlayerByPosition(PlayerPosition);
+	return TeamMap[Team];
 }

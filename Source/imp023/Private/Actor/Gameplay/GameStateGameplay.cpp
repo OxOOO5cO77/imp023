@@ -4,6 +4,7 @@
 
 #include "Actor/Gameplay/GameModeGameplay.h"
 #include "Actor/Gameplay/PlayerStateGameplay.h"
+#include "Data/TeamData.h"
 #include "Subsystem/TeamStateSubsystem.h"
 #include "Utils/GameplayUtils.h"
 
@@ -216,5 +217,7 @@ FLinearColor AGameStateGameplay::GetTeamColorForPeriod(ETeam const Team) const
 {
 	UTeamStateSubsystem const* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
 	check(TeamStateSubsystem);
-	return TeamStateSubsystem->GetColor(FGameplayUtils::MapPeriodTeamToTeam(Period, Team));
+
+	UTeamData const* const TeamData = TeamStateSubsystem->GetTeam(FGameplayUtils::MapPeriodTeamToTeam(Period, Team));
+	return TeamData->Color;
 }

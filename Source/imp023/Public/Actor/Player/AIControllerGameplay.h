@@ -16,7 +16,6 @@ class IMP023_API AAIControllerGameplay : public AAIController
 
 public:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaSeconds) override;
 
 private:
 	UPROPERTY(EditAnywhere)
