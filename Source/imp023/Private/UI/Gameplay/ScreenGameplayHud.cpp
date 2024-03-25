@@ -9,9 +9,9 @@
 #include "Data/TeamData.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
-void UScreenGameplayHud::NativeOnInitialized()
+void UScreenGameplayHud::NativeConstruct()
 {
-	Super::NativeOnInitialized();
+	Super::NativeConstruct();
 
 	GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 

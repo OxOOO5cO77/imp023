@@ -21,30 +21,39 @@ struct FLeagueTeam
 	FLeagueTeam(UTeamData const* const InTeam, ELeagueController const InController)
 		: Team(InTeam)
 		, Controller(InController)
-		, Win(0)
-		, Lose(0)
-		, Draw(0)
+		, Games(0)
+		, Wins(0)
+		, SharedWins(0)
+		, Draws(0)
+		, SharedLosses(0)
+		, Losses(0)
 	{
 	}
 
 	bool operator==(uint32 const ID) const;
 
+	int Points() const;
+
 	UTeamData const* const Team;
 	ELeagueController Controller;
-	int Win;
-	int Lose;
-	int Draw;
+	int Games;
+	int Wins;
+	int SharedWins;
+	int Draws;
+	int SharedLosses;
+	int Losses;
 };
 
-struct FLeagueTeamForMatch : public FLeagueTeam
+struct FLeagueTeamForMatch
 {
-	FLeagueTeamForMatch(UTeamData const* const InTeam, ELeagueController const InController, ETeam const InHomeAway)
-		: FLeagueTeam(InTeam, InController)
+	FLeagueTeamForMatch(FLeagueTeam* const InTeam, ETeam const InHomeAway)
+		: LeagueTeam(InTeam)
 		, HomeAway(InHomeAway)
 	{
 	}
 
-	ETeam HomeAway;
+	FLeagueTeam* const LeagueTeam;
+	ETeam const HomeAway;
 };
 
 /**
@@ -58,12 +67,19 @@ class IMP023_API ULeagueSubsystem : public UGameInstanceSubsystem
 public:
 	void InitializeLeague(TArray<FLeagueTeam> const& Teams);
 
-	TArray<FLeagueTeamForMatch> const& NextMatchTeams() const;
-	void MatchComplete();
-	TTuple<int,int,int> GetWinLoseDraw(uint32 const ID) const;
+	TArray<FLeagueTeamForMatch> const& CurrentMatchTeams() const;
+	void MatchComplete(TArray<int> const& Scores);
+
+	FLeagueTeam const* GetTeamByID(uint32 const ID) const;
+	FLeagueTeam const* GetTeamByIndex(uint32 Index) const;
+
+	FText GetTeamRankByID(uint32 const ID) const;
+	FText GetTeamRankByIndex(uint32 Index) const;
+
+	static constexpr int GTeamCount = 8;
 
 private:
 	TArray<FLeagueTeam> LeagueTeams;
-	int DayIndex;
+	int GameIndex;
 	TArray<TArray<FLeagueTeamForMatch>> Schedule;
 };

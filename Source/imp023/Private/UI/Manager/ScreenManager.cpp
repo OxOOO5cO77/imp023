@@ -3,6 +3,8 @@
 
 #include "UI/Manager/ScreenManager.h"
 
+#include "Subsystem/MenuTransitionSubsystem.h"
+
 UScreenManager::UScreenManager()
 	: CurScreen(nullptr)
 {
@@ -10,8 +12,14 @@ UScreenManager::UScreenManager()
 
 void UScreenManager::Start()
 {
-	check(!Default.IsEmpty());
-	NavigateTo(Default);
+	UMenuTransitionSubsystem* const MenuTransitionSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UMenuTransitionSubsystem>();
+
+	FString const& StartScreen = MenuTransitionSubsystem->GetStartScreen();
+	FString StartScreenToUse = StartScreen.IsEmpty() ? Default : StartScreen;
+	check(!StartScreenToUse.IsEmpty());
+	NavigateTo(StartScreenToUse);
+
+	MenuTransitionSubsystem->SetStartScreen(Default);
 }
 
 void UScreenManager::NavigateTo(FString const& Screen)
@@ -53,14 +61,14 @@ void UScreenManager::HandleInputMove(int const ControllerIndex, FVector2D const&
 {
 	FVector2D const AbsDirection = Direction.GetAbs();
 
-	if( AbsDirection.IsNearlyZero())
+	if (AbsDirection.IsNearlyZero())
 	{
 		return;
 	}
 
 	if (AbsDirection.X > AbsDirection.Y)
 	{
-		if( Direction.X > 0 )
+		if (Direction.X > 0)
 		{
 			CurScreen->OnInputRight(ControllerIndex);
 		}
@@ -71,7 +79,7 @@ void UScreenManager::HandleInputMove(int const ControllerIndex, FVector2D const&
 	}
 	else
 	{
-		if( Direction.Y > 0 )
+		if (Direction.Y > 0)
 		{
 			CurScreen->OnInputUp(ControllerIndex);
 		}

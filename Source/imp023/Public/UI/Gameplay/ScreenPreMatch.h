@@ -17,7 +17,7 @@ class IMP023_API UScreenPreMatch : public UScreen
 	GENERATED_BODY()
 
 protected:
-	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 	virtual void OnInputMain(int const PlayerIndex) override;
 
 private:

@@ -3,26 +3,27 @@
 #include "UI/Menu/ScreenPlayerSelect.h"
 
 #include "Actor/Menu/GameStateMenu.h"
+#include "Algo/AllOf.h"
 #include "Subsystem/LeagueSubsystem.h"
 #include "Subsystem/TeamStateSubsystem.h"
 #include "UI/Menu/PartTeam.h"
 
 static constexpr int GMaxSlot = 2;
 
-void UScreenPlayerSelect::NativeOnInitialized()
+void UScreenPlayerSelect::NativeConstruct()
 {
-	Super::NativeOnInitialized();
+	Super::NativeConstruct();
 
 	ULeagueSubsystem const* const LeagueSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<ULeagueSubsystem>();
 	check(LeagueSubsystem);
 
-	MatchTeams = LeagueSubsystem->NextMatchTeams();
+	MatchTeams = LeagueSubsystem->CurrentMatchTeams();
 
 	for (int i = 0; i < 3; ++i)
 	{
 		UPartTeam* const PartTeam = Part(i);
-		PartTeam->SetLogo(MatchTeams[i].Team);
-		PartTeam->SetText(MatchTeams[i].Controller == ELeagueController::Human ? FString() : TEXT("CPU"));;
+		PartTeam->SetLogo(MatchTeams[i].LeagueTeam->Team);
+		PartTeam->SetText(MatchTeams[i].LeagueTeam->Controller == ELeagueController::Human ? FString() : TEXT("CPU"));;
 	}
 
 	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();
@@ -41,13 +42,13 @@ void UScreenPlayerSelect::NativeOnInitialized()
 
 UPartTeam* UScreenPlayerSelect::Part(uint32 const PartIndex) const
 {
-	static UPartTeam* const Parts[3] = {TeamHome, TeamAway1, TeamAway2};
+	UPartTeam* const Parts[3] = {TeamHome, TeamAway1, TeamAway2};
 	return Parts[PartIndex];
 }
 
 void UScreenPlayerSelect::NextTrackedIndex()
 {
-	while (TrackedSlotIndex <= GMaxSlot && MatchTeams[TrackedSlotIndex].Controller == ELeagueController::CPU)
+	while (TrackedSlotIndex <= GMaxSlot && MatchTeams[TrackedSlotIndex].LeagueTeam->Controller == ELeagueController::CPU)
 	{
 		++TrackedSlotIndex;
 	}
@@ -55,7 +56,7 @@ void UScreenPlayerSelect::NextTrackedIndex()
 
 void UScreenPlayerSelect::PrevTrackedIndex()
 {
-	while (TrackedSlotIndex > 0 && MatchTeams[TrackedSlotIndex - 1].Controller == ELeagueController::CPU)
+	while (TrackedSlotIndex > 0 && MatchTeams[TrackedSlotIndex - 1].LeagueTeam->Controller == ELeagueController::CPU)
 	{
 		--TrackedSlotIndex;
 	}
@@ -68,6 +69,15 @@ void UScreenPlayerSelect::OnInputMain(int const PlayerIndex)
 
 	if (TrackedSlotIndex > GMaxSlot)
 	{
+		if (Algo::AllOf(MatchTeams, [](FLeagueTeamForMatch const& LeagueTeam) { return LeagueTeam.LeagueTeam->Controller == ELeagueController::CPU; }))
+		{
+			ULeagueSubsystem* const LeagueSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<ULeagueSubsystem>();
+			TArray<int> Scores = {FMath::RandRange(0, 12), FMath::RandRange(0, 12), FMath::RandRange(0, 12)};
+			LeagueSubsystem->MatchComplete(Scores);
+
+			ScreenManager->NavigateTo("Standings");
+			return;
+		}
 		GetWorld()->ServerTravel("/Game/Level/Arena");
 		return;
 	}

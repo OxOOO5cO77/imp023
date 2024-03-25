@@ -19,7 +19,7 @@ class IMP023_API UScreenGoal : public UScreen
 	GENERATED_BODY()
 
 public:
-	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 
 protected:
 	virtual void OnInputMain(int PlayerIndex) override;

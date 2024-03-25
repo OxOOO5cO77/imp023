@@ -17,7 +17,7 @@ class IMP023_API UScreenTeamSelect : public UScreen
 	GENERATED_BODY()
 
 protected:
-	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 	virtual void OnInputMain(int const PlayerIndex) override;
 	virtual void OnInputBack(int const PlayerIndex) override;
 	virtual void OnInputUp(int const PlayerIndex) override;

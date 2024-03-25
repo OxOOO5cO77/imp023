@@ -8,9 +8,9 @@
 #include "Subsystem/LeagueSubsystem.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
-void UScreenPreMatch::NativeOnInitialized()
+void UScreenPreMatch::NativeConstruct()
 {
-	Super::NativeOnInitialized();
+	Super::NativeConstruct();
 
 	AGameStateGameplay const* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 
@@ -28,16 +28,15 @@ void UScreenPreMatch::NativeOnInitialized()
 	ULeagueSubsystem const* const LeagueSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<ULeagueSubsystem>();
 	check(LeagueSubsystem);
 
-	TTuple<int,int,int> const& RecordHome = LeagueSubsystem->GetWinLoseDraw(Home->ID);
-	TTuple<int,int,int> const& RecordAway1 = LeagueSubsystem->GetWinLoseDraw(Away1->ID);
-	TTuple<int,int,int> const& RecordAway2 = LeagueSubsystem->GetWinLoseDraw(Away2->ID);
+	FText RankHome = LeagueSubsystem->GetTeamRankByID(Home->ID);
+	FText RankAway1 = LeagueSubsystem->GetTeamRankByID(Away1->ID);
+	FText RankAway2 = LeagueSubsystem->GetTeamRankByID(Away2->ID);
 
-
-	TextHome->SetText(FText::Format(INVTEXT("({0}-{1}-{2})"), RecordHome.Get<0>(), RecordHome.Get<1>(), RecordHome.Get<2>()));
-	TextAway1->SetText(FText::Format(INVTEXT("({0}-{1}-{2})"), RecordAway1.Get<0>(), RecordAway1.Get<1>(), RecordAway1.Get<2>()));
-	TextAway2->SetText(FText::Format(INVTEXT("({0}-{1}-{2})"), RecordAway2.Get<0>(), RecordAway2.Get<1>(), RecordAway2.Get<2>()));
-
+	TextHome->SetText(RankHome);
+	TextAway1->SetText(RankAway1);
+	TextAway2->SetText(RankAway2);
 }
+
 
 void UScreenPreMatch::OnInputMain(int const PlayerIndex)
 {

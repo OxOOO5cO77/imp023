@@ -14,9 +14,9 @@
 
 class UTeamStateSubsystem;
 
-void UScreenGoal::NativeOnInitialized()
+void UScreenGoal::NativeConstruct()
 {
-	Super::NativeOnInitialized();
+	Super::NativeConstruct();
 
 	AGameStateGameplay const* GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 	UTeamStateSubsystem* const TeamStateSubsystem = GetWorld()->GetGameInstance()->GetSubsystem<UTeamStateSubsystem>();

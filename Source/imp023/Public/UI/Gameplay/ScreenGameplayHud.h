@@ -19,7 +19,7 @@ class IMP023_API UScreenGameplayHud : public UScreen
 	GENERATED_BODY()
 
 protected:
-	virtual void NativeOnInitialized() override;
+	virtual void NativeConstruct() override;
 	virtual void NativeDestruct() override;
 	virtual void NativeTick(FGeometry const& MyGeometry, float InDeltaTime) override;
 

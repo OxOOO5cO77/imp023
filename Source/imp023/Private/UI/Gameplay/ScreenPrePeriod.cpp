@@ -9,9 +9,9 @@
 #include "Data/TeamData.h"
 #include "Subsystem/TeamStateSubsystem.h"
 
-void UScreenPrePeriod::NativeOnInitialized()
+void UScreenPrePeriod::NativeConstruct()
 {
-	Super::NativeOnInitialized();
+	Super::NativeConstruct();
 
 	AGameStateGameplay const* const GameState = GetWorld()->GetGameState<AGameStateGameplay>();
 

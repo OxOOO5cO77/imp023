@@ -7,10 +7,13 @@
 #include "ScreenPostMatch.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class IMP023_API UScreenPostMatch : public UScreen
 {
 	GENERATED_BODY()
+
+protected:
+	virtual void OnInputMain(int const ControllerIndex) override;
 };
